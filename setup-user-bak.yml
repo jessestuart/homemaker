@@ -1,0 +1,10 @@
+---
+- name: Setup drone ci server
+  hosts: drone
+  become: true
+  become_user: root
+  gather_facts: 'False'
+  roles:
+    - singleplatform-eng.users
+  vars_files:
+    - ["vars/users.yml"]

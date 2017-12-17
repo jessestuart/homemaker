@@ -1,0 +1,51 @@
+- name: Install apt packages
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update-cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - aptitude
+    - curl
+    - git
+    - ntp
+    - python
+    - python-dev # Required to install some pip packages.
+    - python-setuptools
+    - runit
+    - ufw
+    - vim
+    - wget
+
+- name: Install pip using easy_install
+  easy_install: name=pip
+
+- name: Install pip packages
+  pip: name={{ item }}
+  with_items:
+    # For interacting with AWS.
+    - awscli
+    # Boto is needed to perform some AWS tasks, like pulling from S3.
+    - boto
+    - virtualenv
+
+- name: Ensure GitHub is a known host
+  # To protect against man-in-the-middle attacks, at least use the local
+  # (control) machine to find the right github RSA public key.
+  lineinfile:
+    dest: /etc/ssh/ssh_known_hosts
+    create: yes
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    regexp: "^github\\.com"
+
+# Accept SSH env variables for AWS CLI
+- name: Add AcceptEnv to /etc/sshd.config
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    create: yes
+    state: present
+    line: 'AcceptEnv AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION #AWS Creds'
+    regexp: '#AWS Creds'
+  notify:
+    - Restart ssh service

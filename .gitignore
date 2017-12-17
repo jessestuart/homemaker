@@ -1,0 +1,4 @@
+*.retry
+.DS_Store
+bin/
+/.gtm/

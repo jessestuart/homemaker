@@ -1,0 +1,97 @@
+---
+# Create ssh users and revoke old root and default user access
+# from a newly-provisioned machine.
+#
+# DANGER -- this is destructive. Make sure you want to totally bootstrap
+# a new ssh environment.
+
+- name: Install dependencies.
+  hosts: all
+  become: yes
+  gather_facts: no
+  tags: dependencies
+  roles:
+    - base
+# - name: Ensure Python 2.7 is present
+#   hosts: all
+#   become: yes
+#   gather_facts: False
+#   tags: apt
+#   tasks:
+#     # TODO: Do this with the apt module?
+#     - name: Install Python 2.7
+#       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+#     - name: Install aptitude package required by Ansible
+#       become: yes
+#       apt: pkg=aptitude
+
+# - name: Upgrade Aptitude packages
+#   hosts: all
+#   become: yes
+#   tags: apt
+#   tasks:
+#     - name: Upgrade aptitude packages
+#       apt:
+#         upgrade: 'full'
+#         update_cache: yes
+
+- name: Create SSH users
+  hosts: all
+  become: yes
+  tags: ssh
+  roles:
+    - ssh-users
+
+- name: Remove root access
+  hosts: all
+  become: yes
+  tags: opsec
+  tasks:
+    - name: Remove root public keys
+      file:
+        state: absent
+        path: /root/.ssh/authorized_keys
+
+    - name: Deny root login
+      lineinfile:
+        state: present
+        dest: /etc/ssh/sshd_config
+        regexp: PermitRootLogin
+        line: 'PermitRootLogin no'
+      notify:
+        - Restart the Debian ssh service
+
+  handlers:
+    - name: Restart the Debian ssh service
+      service:
+        name: ssh
+        state: restarted
+      when: ansible_os_family == 'Debian'
+
+#
+# Set the hostname as specified in the inventory.
+#
+- name: Set hostname
+  hosts: all
+  become: yes
+  vars_files:
+    - ['vars/main.yml']
+  tags:
+    - hostname
+  tasks:
+    - name: Set /etc/hostname
+      # This is read at boottime to set the hostname.
+      shell: echo "{{ hostname }}" > /etc/hostname
+
+    - name: Change the current hostname
+      # This sets the hostname for the present session.
+      command: hostname "{{ hostname }}"
+
+    - name: Register hostname in /etc/hosts
+      # This is required to be in sync because many commands, such as sudo,
+      # may FAIL otherwise.
+      lineinfile:
+        state: present
+        dest: /etc/hosts
+        regexp: '127.0.0.1'
+        line: "127.0.0.1 localhost {{ hostname }}"

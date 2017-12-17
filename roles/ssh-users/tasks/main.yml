@@ -1,0 +1,107 @@
+# ======================
+# Configuring SSH users.
+# ======================
+---
+- name: Gathering non-production user state
+  set_fact:
+    state_key: state
+
+- name: Set users to add when specified
+  set_fact:
+    users_list:
+      - "{{ ssh_users | selectattr('name', 'match', lookup('env','USER')) | first }}"
+      - "{{ ssh_users | selectattr('name', 'match', 'ubuntu') | first }}"
+  when: self_only is defined
+
+- name: Set users to add when not specified
+  set_fact:
+    users_list: "{{ ssh_users }}"
+  when: self_only is undefined
+
+- name: Create or remove users
+  user:
+    name: "{{ item.name }}"
+    state: "{{ item[state_key] }}"
+    shell: "{{ item.shell }}"
+  with_items: "{{ users_list }}"
+  tags:
+    - remove
+
+- name: Add authorized keys for active users only
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.public_key }}"
+    state: present
+  when: item[state_key] == 'present'
+  with_items: "{{ users_list }}"
+
+- name: Remove unauthorized keys
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.revoked_public_key }}"
+    state: absent
+  when: item[state_key] == 'present' and item.revoked_public_key is defined
+  with_items: "{{ users_list }}"
+  tags:
+    - revoked-keys
+    - remove
+
+- name: Synchronize home directories
+  # Careful editing this; rsync is touchy with trailing slashes!
+  synchronize:
+    src: "home/{{ item.name }}/"
+    dest: "/home/{{ item.name }}/"
+    recursive: yes
+    perms: yes
+  when: >
+    (item[state_key] == 'present') and (item.custom_home)
+  with_items: "{{ users_list }}"
+  tags:
+    - rsync
+
+- name: Change ownership of home directories
+  # Careful editing this; rsync is touchy with trailing slashes!
+  file:
+    state: directory
+    path: "/home/{{ item.name }}"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+  when: >
+    (item[state_key] == 'present') and (item.custom_home)
+  with_items: "{{ users_list }}"
+  tags:
+    - rsync
+#
+# Sudo
+#
+- name: Ensure /etc/sudoers.d directory is present
+  file: path=/etc/sudoers.d state=directory
+
+- name: Ensure /etc/sudoers.d is scanned by sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "#includedir\\s+/etc/sudoers.d"
+    line: "#includedir /etc/sudoers.d"
+
+- name: Ensure sudoers each have a file in /etc/sudoers.d/
+  # No password required. Be VERY CAREFUL editing this.
+  lineinfile:
+    dest: /etc/sudoers.d/{{ item.name }}
+    state: present
+    create: yes
+    owner: root
+    group: root
+    mode: 0400
+    regexp: "{{ item.name }} .*"
+    line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
+    validate: 'visudo -cf %s'
+  when: (item[state_key] == 'present') and (item.is_sudoer)
+  with_items: "{{ users_list }}"
+
+- name: Remove sudoers files for absent users or non sudoers
+  file: path=/etc/sudoers.d/{{ item.name }} state=absent
+  when: (item[state_key] == 'absent') or (not item.is_sudoer)
+  with_items: "{{ users_list }}"
+  tags:
+    - remove

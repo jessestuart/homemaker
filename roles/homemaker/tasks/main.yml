@@ -1,0 +1,16 @@
+---
+
+- rsync
+- mosh
+- nodejs
+- neovim
+- tmux
+- zsh
+
+
+
+# Maybe?
+- openssh-client
+- openssh-server
+- openssh-sftp-server
+- openssl
