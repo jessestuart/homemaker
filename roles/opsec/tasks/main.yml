@@ -1,0 +1,14 @@
+---
+- name: Remove root public keys
+  file:
+    state: absent
+    path: /root/.ssh/authorized_keys
+
+- name: Deny root login
+  lineinfile:
+    state: present
+    dest: /etc/ssh/sshd_config
+    regexp: PermitRootLogin
+    line: 'PermitRootLogin no'
+  notify:
+    - Restart ssh service

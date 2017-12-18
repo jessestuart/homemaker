@@ -1,21 +1,24 @@
-- name: Install packages
-  apk:
+- name: Install apt packages
+  apt:
     pkg: "{{ item }}"
     state: latest
-    update_cache: yes
+    update-cache: yes
+    cache_valid_time: 3600
   with_items:
-    # - aptitude
+    - aptitude
     - curl
-    - shadow
     - git
-    - openntpd
-    - python2-dev # Required to install some pip packages.
+    - ntp
+    - python
+    - python-dev # Required to install some pip packages.
+    - python-setuptools
     - runit
-    # - ufw
-    - py2-pip
+    - ufw
     - vim
     - wget
-    - openssh
+
+- name: Install pip using easy_install
+  easy_install: name=pip
 
 - name: Install pip packages
   pip: name={{ item }}
@@ -24,6 +27,7 @@
     - awscli
     # Boto is needed to perform some AWS tasks, like pulling from S3.
     - boto
+    - virtualenv
 
 - name: Ensure GitHub is a known host
   # To protect against man-in-the-middle attacks, at least use the local
@@ -36,7 +40,7 @@
     regexp: "^github\\.com"
 
 # Accept SSH env variables for AWS CLI
-- name: Add AcceptEnv to /etc/ssh/sshd_config
+- name: Add AcceptEnv to /etc/sshd.config
   lineinfile:
     dest: /etc/ssh/sshd_config
     create: yes

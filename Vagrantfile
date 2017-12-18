@@ -12,8 +12,10 @@ Vagrant.configure('2') do |config|
     end
     vbox.vm.box = 'alpine/alpine64'
     vbox.vm.network 'forwarded_port', guest: 80, host: 8080
+    vbox.vm.network 'forwarded_port', guest: 5050, host: 5050
+    vbox.vm.provision 'shell', inline: 'apk update; apk add python2-dev'
     vbox.vm.provision :ansible do |ansible|
-      ansible.playbook = 'playbook.yml'
+      ansible.playbook = 'bootstrap.yml'
     end
   end
 
