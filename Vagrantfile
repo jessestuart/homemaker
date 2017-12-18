@@ -19,9 +19,9 @@ Vagrant.configure('2') do |config|
     end
   end
 
-  # --------------------------------------------------------------------
+  # ====================================
   # Definitions for the Docker container
-  # --------------------------------------------------------------------
+  # ====================================
   config.vm.define 'docker', autostart: true do |dkr|
     system('bash bin/generate_keys.sh')
     dkr.vm.provider 'docker' do |d|
@@ -29,12 +29,16 @@ Vagrant.configure('2') do |config|
       d.build_dir = '.'
     end
 
-    dkr.ssh.private_key_path = 'keys/vagrantssh.key'
-    dkr.ssh.username = 'vagrant'
+    # dkr.ssh.private_key_path = 'keys/vagrantssh.key'
+    # dkr.ssh.username = 'vagrant'
+
+    dkr.vm.network 'forwarded_port', guest: 80, host: 8080
+    dkr.vm.network 'forwarded_port', guest: 5050, host: 5050
+    dkr.vm.provision 'shell', inline: 'apk update; apk add python2-dev'
 
     dkr.vm.provision :ansible do |ansible|
       ansible.playbook = 'bootstrap.yml'
-      ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
+      # ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
       # ansible.verbose = 'vvvv'
     end
     dkr.vm.synced_folder '.', "/vagrant"
