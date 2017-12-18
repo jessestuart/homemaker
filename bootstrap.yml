@@ -12,28 +12,6 @@
   tags: dependencies
   roles:
     - base
-# - name: Ensure Python 2.7 is present
-#   hosts: all
-#   become: yes
-#   gather_facts: False
-#   tags: apt
-#   tasks:
-#     # TODO: Do this with the apt module?
-#     - name: Install Python 2.7
-#       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-#     - name: Install aptitude package required by Ansible
-#       become: yes
-#       apt: pkg=aptitude
-
-# - name: Upgrade Aptitude packages
-#   hosts: all
-#   become: yes
-#   tags: apt
-#   tasks:
-#     - name: Upgrade aptitude packages
-#       apt:
-#         upgrade: 'full'
-#         update_cache: yes
 
 - name: Create SSH users
   hosts: all
@@ -46,27 +24,29 @@
   hosts: all
   become: yes
   tags: opsec
-  tasks:
-    - name: Remove root public keys
-      file:
-        state: absent
-        path: /root/.ssh/authorized_keys
+  roles:
+    - opsec
+  # tasks:
+  #   - name: Remove root public keys
+  #     file:
+  #       state: absent
+  #       path: /root/.ssh/authorized_keys
 
-    - name: Deny root login
-      lineinfile:
-        state: present
-        dest: /etc/ssh/sshd_config
-        regexp: PermitRootLogin
-        line: 'PermitRootLogin no'
-      notify:
-        - Restart the Debian ssh service
+  #   - name: Deny root login
+  #     lineinfile:
+  #       state: present
+  #       dest: /etc/ssh/sshd_config
+  #       regexp: PermitRootLogin
+  #       line: 'PermitRootLogin no'
+  #     notify:
+  #       - Restart the Debian ssh service
 
-  handlers:
-    - name: Restart the Debian ssh service
-      service:
-        name: ssh
-        state: restarted
-      when: ansible_os_family == 'Debian'
+  # handlers:
+  #   - name: Restart the Debian ssh service
+  #     service:
+  #       name: ssh
+  #       state: restarted
+  #     when: ansible_os_family == 'Debian'
 
 #
 # Set the hostname as specified in the inventory.
