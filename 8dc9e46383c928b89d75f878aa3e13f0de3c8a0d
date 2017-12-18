@@ -1,0 +1,5 @@
+[ver:1,total:1140]
+Vagrantfile:660,1513584000:240,1513587600:420,m
+bootstrap.yml:246,1513587600:246,r
+.yamllint:144,1513587600:144,d
+roles/base/tasks/main.yml:90,1513587600:90,r
