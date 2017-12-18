@@ -1,0 +1,4 @@
+[ver:1,total:900]
+Dockerfile:600,1513602000:600,m
+keys/vagrantssh.key.pub:180,1513605600:180,r
+Vagrantfile:120,1513605600:120,m
