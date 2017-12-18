@@ -1,0 +1,11 @@
+[ver:1,total:4320]
+Dockerfile:1800,1513591200:1800,m
+roles/base/tasks/main.yml:1159,1513587600:804,1513591200:255,1513594800:100,m
+Vagrantfile:780,1513591200:780,m
+roles/base/handlers/main.yml:134,1513587600:54,1513591200:20,1513594800:60,m
+bootstrap.yml:130,1513591200:130,m
+roles/opsec/tasks/main.yml:115,1513591200:55,1513594800:60,m
+roles/nginx/tasks/main.yml:102,1513587600:12,1513591200:90,r
+roles/opsec/handlers/main.yml:40,1513591200:20,1513594800:20,m
+roles/ssh-users/tasks/main.yml:30,1513587600:30,r
+ansible.cfg:30,1513591200:30,r
