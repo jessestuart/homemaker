@@ -29,48 +29,67 @@ ENV PACKAGES="\
   "
 
 # Some definitions
-ENV SUDOFILE /etc/sudoers
-ENV SSHKEYFILE vagrantssh.key
-ENV USER vagrant
+# ENV SUDOFILE /etc/sudoers
+# ENV SSHKEYFILE vagrantssh.key
+# ENV USER vagrant
 
-# Import the newly generated public key into the docker image
-ADD keys/${SSHKEYFILE}.pub /tmp/${SSHKEYFILE}.pub
+# # Import the newly generated public key into the docker image
+# ADD keys/${SSHKEYFILE}.pub /tmp/${SSHKEYFILE}.pub
 
-RUN \
-  echo; \
-  echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" > /etc/apk/repositories; \
-  echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
-  echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories; \
-  # Update apt-cache, so that stuff can be installed
-  apk update && apk upgrade; \
-  # Install python (otherwise ansible will not work)
-  apk add --no-cache $PACKAGES; \
-  groupadd -r sudo && groupadd -r ssh; \
-  # Install the public key for root user
-  mkdir -p /root/.ssh/; \
-  cat /tmp/${SSHKEYFILE}.pub >> /root/.ssh/authorized_keys; \
-  # Create user
-  useradd \
-  --shell /bin/bash \
-  --create-home     \
-  --base-dir /home  \
-  --user-group      \
-  --groups sudo,ssh \
-  --password ''     \
-  ${USER};          \
-  # # Install the public key for user
-  mkdir -p /home/${USER}/.ssh;                                              \
-  cat /tmp/${SSHKEYFILE}.pub >> /home/${USER}/.ssh/authorized_keys;         \
-  chown -R ${USER}:${USER} /home/${USER}/.ssh;                              \
-  # # Remove the temporary location for the key
-  rm -f /tmp/${SSHKEYFILE}.pub;                                             \
-  # # Enable password-less sudo for all user (including the 'vagrant' use
-  test -e ${SUDOFILE} || touch ${SUDOFILE};                                 \
-  chmod u+w ${SUDOFILE};                                                    \
-  echo '%sudo   ALL=(ALL:ALL) NOPASSWD: ALL' >> ${SUDOFILE};                \
-  chmod u-w ${SUDOFILE};
+RUN apk update && apk upgrade && apk add $PACKAGES
 
-EXPOSE 2222
-ENTRYPOINT ["/usr/bin/dumb-init"]
+RUN adduser -D vagrant;                                               \
+  chgrp -R vagrant /usr/local;                                      \
+  find /usr/local -type d | xargs chmod g+w;                        \
+  echo "vagrant ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/vagrant; \
+  chmod 0440 /etc/sudoers.d/vagrant
+
+ENV     HOME /home/vagrant
+WORKDIR /home/vagrant
+USER    vagrant
+
+ENV DUMB_INIT_SETSID 0
+ENTRYPOINT ["dumb-init"]
 CMD ["tail", "-f", "/dev/null"]
-# CMD ["/bin/bash"]
+
+# CMD ["dumb-init", "-v", "/bin/bash"]
+
+
+# RUN \
+#   echo; \
+#   echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" > /etc/apk/repositories; \
+#   echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+#   echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories; \
+#   # Update apt-cache, so that stuff can be installed
+#   apk update && apk upgrade; \
+#   # Install python (otherwise ansible will not work)
+#   apk add --no-cache $PACKAGES; \
+#   groupadd -r sudo && groupadd -r ssh; \
+#   # Install the public key for root user
+#   mkdir -p /root/.ssh/; \
+#   cat /tmp/${SSHKEYFILE}.pub >> /root/.ssh/authorized_keys; \
+#   # Create user
+#   useradd \
+#   --shell /bin/bash \
+#   --create-home     \
+#   --base-dir /home  \
+#   --user-group      \
+#   --groups sudo,ssh \
+#   --password ''     \
+#   ${USER};          \
+#   # # Install the public key for user
+#   mkdir -p /home/${USER}/.ssh;                                              \
+#   cat /tmp/${SSHKEYFILE}.pub >> /home/${USER}/.ssh/authorized_keys;         \
+#   chown -R ${USER}:${USER} /home/${USER}/.ssh;                              \
+#   # # Remove the temporary location for the key
+#   rm -f /tmp/${SSHKEYFILE}.pub;                                             \
+#   # # Enable password-less sudo for all user (including the 'vagrant' use
+#   test -e ${SUDOFILE} || touch ${SUDOFILE};                                 \
+#   chmod u+w ${SUDOFILE};                                                    \
+#   echo '%sudo   ALL=(ALL:ALL) NOPASSWD: ALL' >> ${SUDOFILE};                \
+#   chmod u-w ${SUDOFILE};
+
+# EXPOSE 2222
+# ENTRYPOINT ["/usr/bin/dumb-init"]
+# CMD ["tail", "-f", "/dev/null"]
+# # CMD ["/bin/bash"]
