@@ -1,0 +1,5 @@
+[ver:1,total:1380]
+Dockerfile:1005,1513771200:1005,m
+Dockerfile.old2:180,1513771200:180,r
+bin/ssh-entrypoint.sh:105,1513771200:105,r
+roles/base/handlers/main.yml:90,1513771200:90,r
