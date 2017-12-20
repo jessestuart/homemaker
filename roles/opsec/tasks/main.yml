@@ -1,4 +1,23 @@
 ---
+- name: Ensure GitHub is a known host
+  # To protect against man-in-the-middle attacks, at least use the local
+  # (control) machine to find the right github RSA public key.
+  lineinfile:
+    dest: /etc/ssh/ssh_known_hosts
+    create: yes
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    regexp: "^github\\.com"
+
+# Accept SSH env variables for AWS CLI
+- name: Add AcceptEnv to /etc/ssh/sshd_config
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    create: yes
+    state: present
+    line: 'AcceptEnv AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION #AWS Creds'
+    regexp: '#AWS Creds'
+
 - name: Remove root public keys
   file:
     state: absent

@@ -10,7 +10,7 @@
       default: "n"
   vars_files:
     - "vars/credentials.yml"
-    - "vars/main.yml"
+    - "host_vars/main.yml"
   roles:
     - { role: nginx, when: run_roles == "y" }
   tasks:

@@ -4,7 +4,7 @@
   become: yes
   become_user: root
   vars_files:
-    - vars/main.yml
+    - host_vars/main.yml
   roles:
     - role: angstwad.docker_ubuntu
       import: setup-server

@@ -1,4 +1,4 @@
-hostname: jspi
+hostname: homemaker
 
 # server_setup_ssl: false
 # server_ssl_key_path: "/etc/nginx/ssl/drone-ci.key"

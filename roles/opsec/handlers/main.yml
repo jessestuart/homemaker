@@ -1,6 +1,5 @@
 ---
 - name: Restart ssh service
-  service:
-    name: sshd
-    state: restarted
-
+  command: /etc/init.d/sshd restart
+  become: yes
+  ignore_errors: yes
