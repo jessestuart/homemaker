@@ -1,29 +1,19 @@
-ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
+# vi: set ft=ruby :
+Vagrant.configure('2') do |config|
 
-Vagrant.configure("2") do |config|
-
-  config.ssh.username   = 'root'
-  config.ssh.password   = 'root'
-  config.ssh.port = 2222
-
-  config.hostmanager.enabled           = true
-  config.hostmanager.manage_guest      = true
-
-  config.vm.provider "docker" do |d|
-    d.build_dir       = "."
-    d.has_ssh         = true
-    d.remains_running = true
+  # ======================================
+  # Definitions for the VirtualBox machine
+  # ======================================
+  config.vm.define 'virtualbox', autostart: true do |vbox|
+    vbox.vm.provider 'virtualbox' do |v|
+      v.memory = 2048
+      v.cpus = 2
+    end
+    vbox.vm.box = 'alpine/alpine64'
+    # vbox.vm.network 'forwarded_port', guest: 80, host: 8080
+    vbox.vm.provision 'shell', inline: 'apk update; apk add python2-dev'
+    vbox.vm.provision :ansible do |ansible|
+      ansible.playbook = 'bootstrap.yml'
+    end
   end
-
-  config.vm.hostname = "ansible"
-
-  config.vm.network "forwarded_port", guest: 8080, host: 7000, host_ip: "127.0.0.1", auto_correct: true
-
-  config.vm.provision :hostmanager
-
-  config.vm.provision :ansible do |ansible|
-    ansible.become        = true
-    ansible.playbook      = './bootstrap.yml'
-  end
-
 end
