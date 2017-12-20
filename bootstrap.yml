@@ -13,41 +13,38 @@
   roles:
     - base
 
-- name: Create SSH users
+- name: Create SSH users.
   hosts: all
   become: yes
   tags: ssh
   roles:
     - ssh-users
 
-- name: Remove root access
+- name: Remove root access & harden box security.
   hosts: all
   become: yes
   tags: opsec
   roles:
     - opsec
 
-#
 # Set the hostname as specified in the inventory.
-#
-# - name: Set hostname
-#   hosts: all
-#   become: yes
-#   vars_files:
-#     - ['host_vars/main.yml']
-#   tags:
-#     - hostname
-#   tasks:
-#     # This is read at boottime to set the hostname.
-#     - name: Set /etc/hostname
-#       hostname:
-#         name: "{{ hostname }}"
-
-#     - name: Register hostname in /etc/hosts
-#       # This is required to be in sync because many commands, such as sudo,
-#       # may fail otherwise.
-#       lineinfile:
-#         state: present
-#         dest: /etc/hosts
-#         regexp: '127.0.0.1'
-#         line: "127.0.0.1 localhost {{ hostname }}"
+- name: Set hostname
+  hosts: all
+  become: yes
+  vars_files:
+    - ['host_vars/main.yml']
+  tags:
+    - hostname
+  tasks:
+    # This is read at boottime to set the hostname.
+    - name: Set /etc/hostname
+      hostname:
+        name: "{{ hostname }}"
+    - name: Register hostname in /etc/hosts
+      # This is required to be in sync because many commands, such as sudo,
+      # may fail otherwise.
+      lineinfile:
+        state: present
+        dest: /etc/hosts
+        regexp: '127.0.0.1'
+        line: "127.0.0.1 localhost {{ hostname }}"
