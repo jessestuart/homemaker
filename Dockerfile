@@ -1,4 +1,5 @@
-FROM alpine:latest
+FROM jessestuart/phusion-baseimage
+LABEL maintainer="Jesse Stuart <hi@jessestuart.com>"
 
 ENV ROOT_PASSWORD root
 ENV PACKAGES="\
@@ -18,20 +19,14 @@ ENV PACKAGES="\
   python2-dev \
   shadow \
   sudo \
-"
+  "
 
-RUN apk --update add $PACKAGES \
-    && sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config \
-    && echo "root:${ROOT_PASSWORD}" | chpasswd \
-    && rm -rf /var/cache/apk/* /tmp/* \
-    && echo '' > /etc/motd \
-    && ssh-keygen -A \
-    # && rc-service dropbear start \
-    && rc-update add dropbear
+RUN \
+  && apk --update add $PACKAGES \
+  && sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config \
+  && echo "root:${ROOT_PASSWORD}" | chpasswd \
+  && rm -rf /var/cache/apk/* /tmp/*
 
-# do not detach (-D), log to stderr (-e), passthrough other arguments
-# COPY bin/ssh-entrypoint.sh /usr/local/bin/
-
+COPY bin/ssh-entrypoint.sh /usr/local/bin/
 EXPOSE 22
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD ["/usr/sbin/sshd", "-D", "-e"]
+ENTRYPOINT ["ssh-entrypoint.sh"]

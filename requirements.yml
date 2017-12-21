@@ -1,7 +1,13 @@
 ---
 - src: dev-sec.os-hardening
-- src: angstwad.docker_ubuntu
-- src: paralect.drone
-- src: franklinkim.users
-- src: singleplatform-eng.users
-- src: sansible.users_and_groups
+- src: bennojoy.ntp
+- src: geerlingguy.repo-epel
+- src: geerlingguy.pip
+- src: geerlingguy.docker
+- src: nephelaiio.tmux
+- src: loliee.zsh
+# - src: angstwad.docker_ubuntu
+# - src: paralect.drone
+# - src: franklinkim.users
+# - src: singleplatform-eng.users
+# - src: sansible.users_and_groups

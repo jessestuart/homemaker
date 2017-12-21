@@ -1,26 +1,72 @@
+---
+- name: Ensure python 2.7 is installed.
+  raw: test -e /usr/bin/python || (yum -y update; yum -y install python)
+
+- name: Ensure pip is installed.
+  include_role:
+    name: geerlingguy.repo-epel
+
+- name: Ensure pip is installed.
+  include_role:
+    name: geerlingguy.pip
+
 - name: Ensure required packages are installed.
-  apk:
-    pkg: "{{ item }}"
+  when: ansible_distribution == 'CentOS'
+  yum:
+    name: "{{ item }}"
     state: latest
-    update_cache: yes
+    # update_cache: yes
   with_items:
-    # - aptitude
+    - coreutils
     - curl
-    - shadow
     - git
-    - openntpd
-    - python2-dev # Required to install some pip packages.
-    - runit
-    # - ufw
-    - py2-pip
-    - vim
-    - wget
+    - make
+    # - openntpd
+    - ntp
     - openssh
+    # - python-pip
+    # - outils-sha256
+    # - py2-pip
+    # - python2-dev # Required to install some pip packages.
+    # - shadow
+    - sudo
+    - vim
+    # - py2-virtualenv
+    - python-virtualenv
+    - wget
+
+# - name: Ensure required packages are installed.
+#   when: ansible_os_family == 'CentOS'
+#   yum:
+#     name: "{{ item }}" #     state: latest
+#     update_cache: yes
+#   with_items: "{{ packages.centos }}"
 
 - name: Install AWS-related packages from pip.
-  pip: name={{ item }}
+  pip: "name={{ item }}"
   with_items:
     # For interacting with AWS.
     - awscli
     # Boto is needed to perform some AWS tasks, like pulling from S3.
     - boto
+
+# # This is read at boottime to set the hostname.
+# - name: Read username from `whoami`.
+#   shell: whoami
+#   register: whoami_user
+#   tags: hostname
+
+# Set the hostname as specified in the inventory.
+- name: Set /etc/hostname
+  tags: hostname
+  hostname:
+    name: "{{ hostname }}"
+
+# This is required to be in sync because many commands, such as sudo,
+# may fail otherwise.
+- name: Register hostname in /etc/hosts
+  lineinfile:
+    state: present
+    dest: /etc/hosts
+    regexp: '127.0.0.1'
+    line: "127.0.0.1 localhost {{ hostname }}"

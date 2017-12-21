@@ -1,18 +1,19 @@
 ---
+- name: Bootstrap the environment -- install dependencies and set hostname.
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tags: dependencies
+  vars_files:
+    - host_vars/main.yml
+  roles:
+    - base
+
 # Create ssh users and revoke old root and default user access
 # from a newly-provisioned machine.
 #
 # DANGER -- this is destructive. Make sure you want to totally bootstrap
 # a new ssh environment.
-
-- name: Install dependencies.
-  hosts: all
-  become: yes
-  gather_facts: no
-  tags: dependencies
-  roles:
-    - base
-
 - name: Create SSH users.
   hosts: all
   become: yes
@@ -27,24 +28,63 @@
   roles:
     - opsec
 
-# Set the hostname as specified in the inventory.
-- name: Set hostname
+- name: Set up NTP.
+  hosts: all
+  become: yes
+  roles:
+    - bennojoy.ntp
+
+- name: Install docker.
+  hosts: all
+  tags: docker
+  become: yes
+  roles:
+    - geerlingguy.docker
+
+- name: Install pip.
+  hosts: all
+  tags: pip
+  become: yes
+  roles:
+    - geerlingguy.pip
+
+- name: Install tmux.
+  hosts: all
+  become: yes
+  tags:
+    - deps
+    - tmux
+  roles:
+    - nephelaiio.tmux
+
+- name: Install zsh and prezto.
+  hosts: all
+  become: yes
+  become_user: "{{ user }}"
+  tags:
+    - deps
+    - zsh
+  vars_files:
+    - 'host_vars/main.yml'
+  tasks:
+    - name: Install zsh.
+      yum: name=zsh state=latest
+    - name: Install Prezto.
+      git:
+        repo: https://github.com/sorin-ionescu/prezto
+        dest: "/home/{{ user }}/.zprezto"
+        recursive: yes
+    - name: Set default shell.
+      user:
+        name: "{{ user }}"
+        shell: /bin/zsh
+
+- name: Make yourself at home.
+  gather_facts: yes
   hosts: all
   become: yes
   vars_files:
-    - ['host_vars/main.yml']
-  tags:
-    - hostname
-  tasks:
-    # This is read at boottime to set the hostname.
-    - name: Set /etc/hostname
-      hostname:
-        name: "{{ hostname }}"
-    - name: Register hostname in /etc/hosts
-      # This is required to be in sync because many commands, such as sudo,
-      # may fail otherwise.
-      lineinfile:
-        state: present
-        dest: /etc/hosts
-        regexp: '127.0.0.1'
-        line: "127.0.0.1 localhost {{ hostname }}"
+    - 'host_vars/main.yml'
+  tags: homemaker
+  roles:
+    - homemaker

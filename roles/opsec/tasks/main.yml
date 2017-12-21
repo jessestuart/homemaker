@@ -17,6 +17,8 @@
     state: present
     line: 'AcceptEnv AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION #AWS Creds'
     regexp: '#AWS Creds'
+  notify:
+    - Restart ssh service
 
 - name: Remove root public keys
   file:
