@@ -8,8 +8,10 @@
 - name: Install dependencies.
   hosts: all
   become: yes
-  gather_facts: no
+  gather_facts: yes
   tags: dependencies
+  vars_files:
+    - group_vars/packages.yml
   roles:
     - base
 
@@ -40,6 +42,7 @@
     - name: Set /etc/hostname
       hostname:
         name: "{{ hostname }}"
+      when: whoami == 'root'
     - name: Register hostname in /etc/hosts
       # This is required to be in sync because many commands, such as sudo,
       # may fail otherwise.

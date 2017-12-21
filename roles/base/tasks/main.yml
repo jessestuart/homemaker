@@ -1,21 +1,26 @@
+- name: Print ansible_os_family.
+  shell: echo $ansible_os_family
+
 - name: Ensure required packages are installed.
+  when: ansible_os_family == 'Alpine'
   apk:
     pkg: "{{ item }}"
     state: latest
     update_cache: yes
-  with_items:
-    # - aptitude
-    - curl
-    - shadow
-    - git
-    - openntpd
-    - python2-dev # Required to install some pip packages.
-    - runit
-    # - ufw
-    - py2-pip
-    - vim
-    - wget
-    - openssh
+  with_items: "{{ packages.alpine }}"
+
+- name: Ensure required packages are installed.
+  when: ansible_os_family == 'CentOS'
+  yum:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items: "{{ packages.centos }}"
+
+- name: Ensure pip is installed.
+  easy_install:
+    name: pip
+    state: latest
 
 - name: Install AWS-related packages from pip.
   pip: name={{ item }}

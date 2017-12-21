@@ -46,16 +46,17 @@ Vagrant.configure('2') do |config|
     # dkr.ssh.private_key_path = 'keys/vagrantssh.key'
     # dkr.ssh.username = 'vagrant'
 
-    dkr.vm.provision 'shell', inline: 'apk update; apk add python2-dev'
+    dkr.vm.provision 'shell', inline: 'yum -y update; yum -y install rsync python2-dev'
     # dkr.vm.provision :ansible do |ansible|
     #   ansible.playbook = 'bootstrap.yml'
     # end
 
-    # dkr.vm.provision :ansible do |ansible|
-    #   ansible.playbook = 'bootstrap.yml'
-    #   ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
-    #   ansible.verbose = 'vvvv'
-    # end
+    dkr.vm.provision :ansible do |ansible|
+      ansible.playbook = 'bootstrap.yml'
+      ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
+      ansible.verbose = 'v'
+    end
+    dkr.vm.synced_folder ".", "/vagrant", disabled: true
     # dkr.vm.synced_folder '.', "/vagrant"
   end
 end
