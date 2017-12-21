@@ -1,0 +1,6 @@
+[ver:1,total:2100]
+roles/base/tasks/main.yml:889,1513893600:889,m
+Vagrantfile:805,1513893600:805,m
+bootstrap.yml:242,1513893600:242,m
+group_vars/packages.yml:144,1513893600:144,m
+host_vars/main.yml:20,1513893600:20,r
