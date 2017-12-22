@@ -1,0 +1,6 @@
+[ver:1,total:660]
+roles/base/tasks/main.yml:460,1513893600:60,1513897200:120,1513900800:20,1513915200:180,1513926000:80,r
+group_vars/packages.yml:140,1513900800:140,r
+bootstrap.yml:20,1513900800:20,r
+roles/opsec/tasks/main.yml:20,1513926000:20,r
+roles/opsec/handlers/main.yml:20,1513926000:20,r
