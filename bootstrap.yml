@@ -60,6 +60,7 @@
 - name: Install zsh and prezto.
   hosts: all
   become: yes
+  become_user: "{{ user }}"
   tags:
     - deps
     - zsh
@@ -71,12 +72,12 @@
     - name: Install Prezto.
       git:
         repo: https://github.com/sorin-ionescu/prezto
-        dest: "$HOME/.zprezto"
+        dest: "/home/{{ user }}/.zprezto"
         recursive: yes
     - name: Set default shell.
       user:
         name: "{{ user }}"
-        shell: zsh
+        shell: /bin/zsh
 
 - name: Make yourself at home.
   gather_facts: yes

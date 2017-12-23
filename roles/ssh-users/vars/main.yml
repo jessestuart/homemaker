@@ -6,17 +6,17 @@
 ### WARNING: Users are only deleted if you mark them as "absent"!
 ###
 ssh_users:
-  # `pi` is the substitute for root login.
-  - name: pi
-    state: present
-    is_sudoer: true
-    custom_home: false
-    shell: /bin/bash
-    public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDEcWKqLYv5n/bvrzBX3kCqOJjKWUX1kk3dKV7lmKOalkRruCcQOcW4ttp0b2G2sVs11zgZdpR6CkTvmNafLGa9L/7rpJ0yxr57wXq0/8D3Pv9Q0RkbEqLFwxZqMzBYmypX9iyUs1ysoB/tULi4Woy0rldqg8a0ddAawlVWLsA1ICUVeWGxa2AZkcSebBWmglMFur7/WLOOIj5iphKAcXRyVPmG0diiq81HujB4wMdNXR+3QInCR4tYZ0zGdypdrm/DaJqEeKqV3qyGTP1zrzmknT/awZnB629jBevFHSySSvxH57eE3ie4A1JzPUqak//oJlrS9SMdeBeVoXxXv2za4km+f3OTtDYcIXbHmf8gY2mffNby46bzJgqYkFAUlDtNhOwBM0xYfh8HFERyxJd+YJ96khNizcduGnqaLOrYHB9Xycq0k3ezR0qmGyTxZu9zKpgbsXLXkzL860ZggACoiWk3hnL5j8nNMaqCu5cJh74BEYe+CflJFoAOsK2uIefrgZUIe/hPxe65Sl4K7eHFOyKWZLbGBzOAqQyfa3T+NQank0KBm75QWAQeaVjp+rLd/3Nge7eGwbyfta82y7w7Jrbl+FTG1fyWzcEu7SiM5d2cr7HzHCI63hDcLwAYcvDyf+Dr58gYVVS4nKNcUet6PY5umCDR5s9HwxaKP8ns0Q==
+  # # `pi` is the substitute for root login.
+  # - name: pi
+  #   state: present
+  #   is_sudoer: true
+  #   custom_home: false
+  #   shell: /bin/bash
+  #   public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDEcWKqLYv5n/bvrzBX3kCqOJjKWUX1kk3dKV7lmKOalkRruCcQOcW4ttp0b2G2sVs11zgZdpR6CkTvmNafLGa9L/7rpJ0yxr57wXq0/8D3Pv9Q0RkbEqLFwxZqMzBYmypX9iyUs1ysoB/tULi4Woy0rldqg8a0ddAawlVWLsA1ICUVeWGxa2AZkcSebBWmglMFur7/WLOOIj5iphKAcXRyVPmG0diiq81HujB4wMdNXR+3QInCR4tYZ0zGdypdrm/DaJqEeKqV3qyGTP1zrzmknT/awZnB629jBevFHSySSvxH57eE3ie4A1JzPUqak//oJlrS9SMdeBeVoXxXv2za4km+f3OTtDYcIXbHmf8gY2mffNby46bzJgqYkFAUlDtNhOwBM0xYfh8HFERyxJd+YJ96khNizcduGnqaLOrYHB9Xycq0k3ezR0qmGyTxZu9zKpgbsXLXkzL860ZggACoiWk3hnL5j8nNMaqCu5cJh74BEYe+CflJFoAOsK2uIefrgZUIe/hPxe65Sl4K7eHFOyKWZLbGBzOAqQyfa3T+NQank0KBm75QWAQeaVjp+rLd/3Nge7eGwbyfta82y7w7Jrbl+FTG1fyWzcEu7SiM5d2cr7HzHCI63hDcLwAYcvDyf+Dr58gYVVS4nKNcUet6PY5umCDR5s9HwxaKP8ns0Q==
 
-  - name: jesse
+  - name: vagrant
     state: present
     is_sudoer: true
     custom_home: false
-    shell: /bin/bash
+    shell: /bin/zsh
     public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3JZwbsMzqmsEQvYVhm+Q1NyE/O/G64xd6s2CuiRld+2PYZimUdZ/Bo0c/oBpiNtpBzWre/cOFjzlBg494hhZKT7IzCfL6DVRiTVj6S3WATkzeXTM2va5IvH5L8YRs0y11jL3nXKB3RO3hANjWnxdGH3N8+BILaTD7q5XX41fKwH5bLhppLppzPFyUUvZfUA01OOczFX1fQhDp2KYrl1j7rEXWAMQT6rUsqawDWaCXtveqaNDN+1NKm//6/IaO11F3zj9LBH1+isYJVTD6N7+ihCcBfmu5xKDw1/lM6DtalGZy6UlNfp5QqnTUsMuMkSf12lhT0hYrp8MfIn7Qklrl
