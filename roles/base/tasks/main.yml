@@ -1,25 +1,35 @@
 ---
+- name: Ensure pip is installed.
+  include_role:
+    name: geerlingguy.repo-epel
+
+- name: Ensure pip is installed.
+  include_role:
+    name: geerlingguy.pip
 
 - name: Ensure required packages are installed.
-  when: ansible_os_family == 'Alpine'
-  apk:
-    pkg: "{{ item }}"
+  when: ansible_distribution == 'CentOS'
+  yum:
+    name: "{{ item }}"
     state: latest
-    update_cache: yes
+    # update_cache: yes
   with_items:
     - coreutils
     - curl
     - git
     - make
-    - openntpd
+    # - openntpd
+    - ntp
     - openssh
-    - outils-sha256
-    - py2-pip
-    - python2-dev # Required to install some pip packages.
-    - shadow
+    # - python-pip
+    # - outils-sha256
+    # - py2-pip
+    # - python2-dev # Required to install some pip packages.
+    # - shadow
     - sudo
     - vim
-    - py2-virtualenv
+    # - py2-virtualenv
+    - python-virtualenv
     - wget
 
 # - name: Ensure required packages are installed.
@@ -37,18 +47,17 @@
     # Boto is needed to perform some AWS tasks, like pulling from S3.
     - boto
 
-# This is read at boottime to set the hostname.
-- name: Read username from `whoami`.
-  shell: whoami
-  register: whoami_user
-  tags: hostname
+# # This is read at boottime to set the hostname.
+# - name: Read username from `whoami`.
+#   shell: whoami
+#   register: whoami_user
+#   tags: hostname
 
 # Set the hostname as specified in the inventory.
 - name: Set /etc/hostname
   tags: hostname
   hostname:
     name: "{{ hostname }}"
-  when: whoami_user == 'root'
 
 # This is required to be in sync because many commands, such as sudo,
 # may fail otherwise.

@@ -10,11 +10,15 @@ Vagrant.configure('2') do |config|
       v.memory = 2048
       v.cpus = 2
     end
-    vbox.vm.box = 'alpine/alpine64'
+    # vbox.vm.box = 'alpine/alpine64'
+    vbox.vm.box = 'centos/7'
     # vbox.vm.network 'forwarded_port', guest: 80, host: 8080
-    vbox.vm.provision 'shell', inline: 'apk update; apk add python2-dev'
+    vbox.vm.provision 'shell', inline: 'yum -y update; yum -y install python'
     vbox.vm.provision :ansible do |ansible|
-      ansible.playbook = 'bootstrap.yml' end
+      ansible.playbook = 'bootstrap.yml'
+      # ansible.tags = 'zsh'
+      # ansible.verbose = 'vvv'
+    end
   end
 
   # ====================================

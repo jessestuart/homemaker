@@ -33,6 +33,3 @@
     line: 'PermitRootLogin no'
   notify:
     - Restart ssh service
-
-- name: Remove the default 'motd' message, while we're at it.
-  command: echo '' > /etc/motd

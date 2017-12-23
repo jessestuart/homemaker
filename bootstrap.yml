@@ -28,11 +28,60 @@
   roles:
     - opsec
 
+- name: Set up NTP.
+  hosts: all
+  become: yes
+  roles:
+    - bennojoy.ntp
+
+- name: Install docker.
+  hosts: all
+  tags: docker
+  become: yes
+  roles:
+    - geerlingguy.docker
+
+- name: Install pip.
+  hosts: all
+  tags: pip
+  become: yes
+  roles:
+    - geerlingguy.pip
+
+- name: Install tmux.
+  hosts: all
+  become: yes
+  tags:
+    - deps
+    - tmux
+  roles:
+    - nephelaiio.tmux
+
+- name: Install zsh and prezto.
+  hosts: all
+  become: yes
+  tags:
+    - deps
+    - zsh
+  vars_files:
+    - 'host_vars/main.yml'
+  tasks:
+    - name: Install zsh.
+      yum: name=zsh state=latest
+    - name: Install Prezto.
+      git:
+        repo: https://github.com/sorin-ionescu/prezto
+        dest: "$HOME/.zprezto"
+        recursive: yes
+    - name: Set default shell.
+      user:
+        name: "{{ user }}"
+        shell: zsh
+
 - name: Make yourself at home.
   gather_facts: yes
   hosts: all
   become: yes
-  become_user: jesse
   vars_files:
     - 'host_vars/main.yml'
   tags: homemaker
