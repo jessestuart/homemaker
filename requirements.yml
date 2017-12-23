@@ -1,7 +1,7 @@
 ---
 - src: dev-sec.os-hardening
-- src: angstwad.docker_ubuntu
-- src: paralect.drone
-- src: franklinkim.users
-- src: singleplatform-eng.users
-- src: sansible.users_and_groups
+# - src: angstwad.docker_ubuntu
+# - src: paralect.drone
+# - src: franklinkim.users
+# - src: singleplatform-eng.users
+# - src: sansible.users_and_groups

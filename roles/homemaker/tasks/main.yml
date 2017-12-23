@@ -1,16 +1,54 @@
 ---
+- name: Install the nice things.
+  apk:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+  become: yes
+  become_user: jesse
+  with_items:
+    - docker
+    - go
+    - mosh
+    - neovim
+    - nodejs
+    - rsync
+    - tmux
+    - zsh
 
-- rsync
-- mosh
-- nodejs
-- neovim
-- tmux
-- zsh
+- name: Install docker-compose.
+  pip: name=docker-compose
+
+- name: Start docker daemon at boot.
+  shell: rc-update add docker boot
+
+- name: Install Thoughtbot's RCM to manage dotfiles.
+  become: yes
+  become_user: "{{ user }}"
+  tags: rcm
+  get_url:
+    url: https://thoughtbot.github.io/rcm/dist/rcm-1.3.1.tar.gz
+    dest: "$HOME/"
+
+- name: foo
+  become: yes
+  become_user: "{{ user }}"
+  tags: rcm
+  shell:
+    pwd && \
+    ls -al && \
+    tar -xvf "$HOME/rcm-1.3.1.tar.gz" && \
+    cd rcm-1.3.1 && \
+    ./configure && \
+    make && \
+    make install
+
+- name: Pull dotfiles.
+  become: yes
+  become_user: "{{ user }}"
+  tags: rcm
+  git:
+    repo: https://github.com/jessestuart/dotfiles
+    dest: "$HOME/dotfiles"
 
 
-
-# Maybe?
-- openssh-client
-- openssh-server
-- openssh-sftp-server
-- openssl
