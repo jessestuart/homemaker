@@ -1,0 +1,3 @@
+[ver:1,total:1500]
+roles/homemaker/tasks/main.yml:1320,1514152800:60,1514156400:1260,m
+roles/tmux/tasks/main.yml:180,1514156400:180,r
