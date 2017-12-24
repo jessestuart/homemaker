@@ -8,5 +8,5 @@ if [ ! -z "${ROOT_PASSWORD}" ] && [ "${ROOT_PASSWORD}" != "root" ]; then
 	echo "root:${ROOT_PASSWORD}" | chpasswd
 fi
 
-# Do not detach (-D), log to stderr (-e), passthrough other arguments.
+# Do not detach (-D), log to stderr (-e), pass through other arguments.
 exec /usr/sbin/sshd -D -e "$@"

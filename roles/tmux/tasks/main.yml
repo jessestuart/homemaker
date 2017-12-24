@@ -13,24 +13,32 @@
 
 - name: Pull down tmux 2.6 release.
   become: yes
-  become_user: "{{ user }}"
   get_url:
     url: https://github.com/tmux/tmux/releases/download/2.6/tmux-2.6.tar.gz
-    dest: "$HOME/tmux-2.6.tar.gz"
+    dest: "/tmp/tmux-2.6.tar.gz"
+
+- name: Create temp installation directory.
+  file:
+    name: /tmp/tmux-2.6
+    state: directory
 
 - name: Unarchive tmux tarball.
   become: yes
-  become_user: "{{ user }}"
   unarchive:
-    src: "$HOME/tmux-2.6.tar.gz"
-    dest: "$HOME/tmux-2.6"
+    src: /tmp/tmux-2.6.tar.gz
+    dest: /tmp/tmux-2.6
     creates: "$HOME/tmux-2.6"
     remote_src: yes
 
 - name: Install tmux.
   become: yes
   shell: |
-    cd tmux-2.6 && \
+    cd /tmp/tmux-2.6 && \
     LDFLAGS="-L/usr/local/lib -Wl,-rpath=/usr/local/lib" ./configure --prefix=/usr/local && \
     make && \
     sudo make install
+
+- name: Remove temp installation directory.
+  file:
+    name: /tmp/tmux-2.6
+    state: absent
