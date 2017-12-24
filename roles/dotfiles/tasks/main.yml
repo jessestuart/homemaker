@@ -1,0 +1,30 @@
+---
+- name: Determine if dotfiles directory exists.
+  become: yes
+  become_user: "{{ user }}"
+  stat:
+    path: "$HOME/dotfiles"
+  register: dotfiles_dir
+
+- name: Create dotfiles directory.
+  become: yes
+  become_user: "{{ user }}"
+  when: not dotfiles_dir.stat.exists
+  file:
+    path: "$HOME/dotfiles"
+    state: present
+
+- name: Pull dotfiles.
+  become: yes
+  become_user: "{{ user }}"
+  tags: rcm
+  git:
+    repo: https://github.com/jessestuart/dotfiles
+    dest: "$HOME/dotfiles"
+    force: yes
+  when: not dotfiles_dir.stat.exists
+
+- name: UNLEASH THE DOTFILES!
+  become: yes
+  become_user: "{{ user }}"
+  command: rcup -d "$HOME/dotfiles"

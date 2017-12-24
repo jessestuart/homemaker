@@ -1,13 +1,8 @@
 ---
-- src: dev-sec.os-hardening
 - src: bennojoy.ntp
-- src: geerlingguy.repo-epel
-- src: geerlingguy.pip
+- src: dev-sec.os-hardening
 - src: geerlingguy.docker
-- src: nephelaiio.tmux
+- src: geerlingguy.pip
+- src: geerlingguy.repo-epel
+- src: joshualund.golang
 - src: loliee.zsh
-# - src: angstwad.docker_ubuntu
-# - src: paralect.drone
-# - src: franklinkim.users
-# - src: singleplatform-eng.users
-# - src: sansible.users_and_groups

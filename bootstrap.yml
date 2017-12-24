@@ -1,83 +1,101 @@
 ---
-- name: Bootstrap the environment -- install dependencies and set hostname.
-  hosts: all
+- name: Install base dependencies and set hostname.
   become: yes
   gather_facts: yes
+  hosts: all
   tags: dependencies
   vars_files:
     - host_vars/main.yml
   roles:
     - base
 
-# Create ssh users and revoke old root and default user access
-# from a newly-provisioned machine.
-#
-# DANGER -- this is destructive. Make sure you want to totally bootstrap
-# a new ssh environment.
 - name: Create SSH users.
-  hosts: all
   become: yes
+  hosts: all
   tags: ssh
   roles:
     - ssh-users
 
 - name: Remove root access & harden box security.
-  hosts: all
   become: yes
+  hosts: all
   tags: opsec
   roles:
     - opsec
 
 - name: Set up NTP.
-  hosts: all
   become: yes
+  hosts: all
   roles:
     - bennojoy.ntp
 
-- name: Install docker.
+- name: Ensure Docker is installed.
+  become: yes
   hosts: all
   tags: docker
-  become: yes
   roles:
     - geerlingguy.docker
 
-- name: Install pip.
+- name: Ensure pip is installed.
+  become: yes
   hosts: all
   tags: pip
-  become: yes
-  roles:
-    - geerlingguy.pip
+  tasks:
+    - name: Install pip.
+      include_role: name=geerlingguy.pip
+    - name: Also ensure pip is up-to-date.
+      pip: name=pip state=latest
 
-- name: Install tmux.
+- name: Ensure tmux is installed.
   hosts: all
   become: yes
+  vars_files:
+    - 'host_vars/main.yml'
   tags:
     - deps
     - tmux
-  roles:
-    - nephelaiio.tmux
+  tasks:
+    - name: Determine tmux version, if installed.
+      shell: tmux -V | sed 's/tmux //'
+      register: tmux_version
+      ignore_errors: yes
+    - name: Install tmux.
+      include_role:
+        name: tmux
 
 - name: Install zsh and prezto.
   hosts: all
   become: yes
-  become_user: "{{ user }}"
   tags:
     - deps
     - zsh
   vars_files:
     - 'host_vars/main.yml'
-  tasks:
-    - name: Install zsh.
-      yum: name=zsh state=latest
-    - name: Install Prezto.
-      git:
-        repo: https://github.com/sorin-ionescu/prezto
-        dest: "/home/{{ user }}/.zprezto"
-        recursive: yes
-    - name: Set default shell.
-      user:
-        name: "{{ user }}"
-        shell: /bin/zsh
+  roles:
+    - zsh
+
+- name: Install Go.
+  become: yes
+  vars_files:
+    - 'host_vars/main.yml'
+  hosts: all
+  tags:
+    - deps
+    - go
+  roles:
+    - joshualund.golang
+
+# TODO: Get this working.
+# - name: Install GTM.
+#   hosts: all
+#   become: yes
+#   vars_files:
+#     - 'host_vars/main.yml'
+#   tags:
+#     - deps
+#     - gtm
+#   roles:
+#     - gtm
 
 - name: Make yourself at home.
   gather_facts: yes

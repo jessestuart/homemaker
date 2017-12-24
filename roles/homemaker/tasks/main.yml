@@ -1,92 +1,62 @@
 ---
+- name: Install yarn repo.
+  become: yes
+  shell: |
+    yum-config-manager --add-repo=https://dl.yarnpkg.com/rpm/yarn.repo
+
+- name: Install ripgrep repo.
+  become: yes
+  shell: |
+    yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
+
+- name: Install IUS (Inline with Upstream Stable).
+  yum:
+    name: https://centos7.iuscommunity.org/ius-release.rpm
+    state: present
+
+- name: Install python 3.
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - python36u
+    - python36u-pip
+
 - name: Install the nice things.
   yum:
     name: "{{ item }}"
     state: latest
     update_cache: yes
   with_items:
-    - go
     - mosh
     - neovim
     - nodejs
+    - ripgrep
     - rsync
+    - yarn
+
+- name: Own `node_modules`
+  become: yes
+  shell: "chown -R {{ user }} /usr/lib/node_modules"
 
 - name: Start docker daemon at boot.
   systemd:
     name: docker
     enabled: yes
   when: ansible_distribution == 'CentOS'
-  # shell: rc-update add docker boot
 
-- name: Update PATH.
+- name: Install RCM to manage dotfiles.
+  become: yes
+  include_role: name=rcm
   tags: rcm
+  vars_files:
+    - 'host_vars/main.yml'
+
+- name: Install dotfiles.
   become: yes
-  become_user: "{{ user }}"
-  lineinfile:
-    dest: /etc/environment
-    state: present
-    backrefs: yes
-    regexp: PATH="$PATH:/usr/local/bin"
-    line: PATH="$PATH:/usr/local/bin"
+  tags: dotfiles
+  include_role: name=dotfiles
+  vars_files:
+    - 'host_vars/main.yml'
 
-- name: Determine if RCM is installed.
-  shell: if (hash lsrc &>/dev/null); then echo 1; else echo 0; fi
-  register: rcm_installed
-  ignore_errors: yes
-  tags: rcm
-
-- name: Install Thoughtbot's RCM to manage dotfiles.
-  tags: rcm
-  become: yes
-  become_user: "{{ user }}"
-  get_url:
-    url: https://thoughtbot.github.io/rcm/dist/rcm-1.3.1.tar.gz
-    dest: "$HOME"
-  # when: not rcm_installed
-
-- name: foo
-  become: yes
-  become_user: "{{ user }}"
-  tags: rcm
-  shell:
-    tar -xvf "$HOME/rcm-1.3.1.tar.gz" && \
-    cd rcm-1.3.1 && \
-    ./configure && \
-    make && \
-    sudo make install
-  # when: not rcm_installed
-
-# - name: Determine if dotfiles directory exists.
-#   become_user: "{{ user }}"
-#   shell: ls "$HOME/dotfiles" &>/dev/null
-#   register: dotfiles_cloned
-#   ignore_errors: yes
-
-- name: Pull dotfiles.
-  become: yes
-  become_user: "{{ user }}"
-  tags: rcm
-  git:
-    repo: https://github.com/jessestuart/dotfiles
-    dest: "$HOME/dotfiles"
-  # when: not dotfiles_cloned
-
-- name: Create vim plug directory.
-  become: yes
-  become_user: "{{ user }}"
-  file:
-    path: "$HOME/.local/share/nvim/site/autoload/plug.vim"
-    state: directory
-    owner: "{{ user }}"
-
-- name: Install vim plug.
-  become: yes
-  become_user: "{{ user }}"
-  tags:
-    - deps
-    - vim
-  get_url:
-    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    dest: "$HOME/.local/share/nvim/site/autoload/plug.vim"
-    owner: "{{ user }}"
-    force: yes
+- name: Set up neovim.
+  include_role: name=nvim

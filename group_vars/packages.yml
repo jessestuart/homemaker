@@ -13,6 +13,10 @@ alpine:
   - vim
   - wget
   - openssh
+    # - python-pip
+    # - outils-sha256
+    # - py2-pip
+    # - py2-virtualenv
 
 centos:
   # - aptitude

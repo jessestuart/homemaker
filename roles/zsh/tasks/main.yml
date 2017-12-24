@@ -1,0 +1,19 @@
+---
+- name: Install zsh.
+  become: yes
+  yum: name=zsh
+
+- name: Install Prezto.
+  become: yes
+  become_user: "{{ user }}"
+  git:
+    repo: https://github.com/sorin-ionescu/prezto
+    dest: "$HOME/.zprezto"
+    recursive: yes
+    force: yes
+
+- name: Set default shell for user.
+  become: yes
+  user:
+    name: "{{ user }}"
+    shell: /bin/zsh

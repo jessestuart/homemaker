@@ -1,0 +1,49 @@
+# ============
+# Neovim setup
+# ============
+---
+- name: Install python neovim bindings.
+  pip:
+    name: neovim
+    executable: "/usr/bin/pip3.6"
+
+- name: Determine if vim plug is installed for neovim.
+  stat:
+    path: "$HOME/.local/share/nvim/site/autoload/plug.vim"
+  register: vim_plug
+  ignore_errors: true
+
+- name: Create vim plug directory.
+  when: not vim_plug.stat.exists
+  become: yes
+  become_user: "{{ user }}"
+  tags:
+    - vim
+  file:
+    path: "$HOME/.local/share/nvim/site/autoload"
+    state: directory
+    owner: "{{ user }}"
+
+- name: Install vim plug.
+  when: not vim_plug.stat.exists
+  become: yes
+  become_user: "{{ user }}"
+  tags:
+    - vim
+  get_url:
+    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    dest: "$HOME/.local/share/nvim/site/autoload/"
+    owner: "{{ user }}"
+    force: yes
+
+- name: Install vim plugins.
+  become: yes
+  become_user: "{{ user }}"
+  ignore_errors: true
+  raw: nvim -e +PlugInstall +qall &>/dev/null
+
+- name: Update remote plugins (e.g., deoplete).
+  become: yes
+  become_user: "{{ user }}"
+  ignore_errors: true
+  raw: nvim -e +UpdateRemotePlugins +qall &>/dev/null
