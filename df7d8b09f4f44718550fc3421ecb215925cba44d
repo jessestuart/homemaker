@@ -1,0 +1,10 @@
+[ver:1,total:1620]
+roles/tmux/tasks/main.yml:640,1514095200:640,m
+bootstrap.yml:348,1514095200:348,m
+roles/opsec/handlers/main.yml:140,1514095200:140,r
+roles/base/tasks/main.yml:122,1514095200:122,m
+roles/ssh-users/vars/main.yml:120,1514095200:120,r
+Vagrantfile:110,1514095200:110,r
+requirements.yml:70,1514095200:70,r
+group_vars/packages.yml:50,1514095200:50,m
+roles/homemaker/tasks/main.yml:20,1514095200:20,r
