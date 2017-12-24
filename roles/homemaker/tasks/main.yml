@@ -35,7 +35,7 @@
   ignore_errors: yes
   tags: rcm
 
-- name: Install Thoughtbot's RCM to manage dotfiles.
+- name: Pull down Thoughtbot's RCM to manage dotfiles.
   tags: rcm
   become: yes
   become_user: "{{ user }}"
@@ -44,7 +44,7 @@
     dest: "$HOME"
   # when: not rcm_installed
 
-- name: foo
+- name: Install RCM.
   become: yes
   become_user: "{{ user }}"
   tags: rcm

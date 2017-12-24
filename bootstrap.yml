@@ -51,11 +51,13 @@
 - name: Install tmux.
   hosts: all
   become: yes
+  vars_files:
+    - 'host_vars/main.yml'
   tags:
     - deps
     - tmux
   roles:
-    - nephelaiio.tmux
+    - tmux
 
 - name: Install zsh and prezto.
   hosts: all

@@ -5,6 +5,7 @@ Vagrant.configure('2') do |config|
   # Definitions for the VirtualBox machine
   # ======================================
 
+  config.cache.auto_detect = true
   config.vm.define 'virtualbox', autostart: true do |vbox|
     vbox.vm.provider 'virtualbox' do |v|
       v.memory = 2048
@@ -15,10 +16,7 @@ Vagrant.configure('2') do |config|
     # vbox.vm.network 'forwarded_port', guest: 80, host: 8080
     vbox.vm.provision :ansible do |ansible|
       ansible.playbook = 'bootstrap.yml'
-      # ansible.inventory_path = './hosts/local'
       ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
-      # ansible.tags = 'zsh'
-      # ansible.verbose = 'vvv'
     end
   end
 
@@ -57,8 +55,6 @@ Vagrant.configure('2') do |config|
     docker.vm.provision :ansible do |ansible|
       ansible.playbook = 'bootstrap.yml'
       ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
-      # ansible.tags = 'vim'
-      ansible.verbose = 'vvv'
     end
   end
 

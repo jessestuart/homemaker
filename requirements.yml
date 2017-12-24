@@ -4,7 +4,7 @@
 - src: geerlingguy.repo-epel
 - src: geerlingguy.pip
 - src: geerlingguy.docker
-- src: nephelaiio.tmux
+# - src: nephelaiio.tmux
 - src: loliee.zsh
 # - src: angstwad.docker_ubuntu
 # - src: paralect.drone
