@@ -6,6 +6,7 @@
     state: latest
     update_cache: yes
   with_items:
+    - gcc
     - libevent
     - libevent-devel
     - ncurses
@@ -26,17 +27,17 @@
   become: yes
   unarchive:
     src: /tmp/tmux-2.6.tar.gz
-    dest: /tmp/tmux-2.6
-    creates: "$HOME/tmux-2.6"
+    dest: /tmp
     remote_src: yes
 
 - name: Install tmux.
   become: yes
   shell: |
     cd /tmp/tmux-2.6 && \
-    LDFLAGS="-L/usr/local/lib -Wl,-rpath=/usr/local/lib" ./configure --prefix=/usr/local && \
+    LDFLAGS="-L/usr/local/lib -Wl,-rpath=/usr/local/lib" \
+    ./configure --prefix=/usr/local && \
     make && \
-    sudo make install
+    make install
 
 - name: Remove temp installation directory.
   file:

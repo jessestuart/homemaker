@@ -22,6 +22,7 @@ Vagrant.configure('2') do |config|
       # ansible.verbose = 'vvv'
     end
   end
+
   # ====================================
   # Definitions for the Docker container
   # ====================================

@@ -15,23 +15,16 @@
   yum:
     name: "{{ item }}"
     state: latest
-    # update_cache: yes
+    update_cache: yes
   with_items:
     - coreutils
     - curl
     - git
     - make
-    # - openntpd
     - ntp
     - openssh
-    # - python-pip
-    # - outils-sha256
-    # - py2-pip
-    # - python2-dev # Required to install some pip packages.
-    # - shadow
     - sudo
     - vim
-    # - py2-virtualenv
     - python-virtualenv
     - wget
 
@@ -49,12 +42,6 @@
     - awscli
     # Boto is needed to perform some AWS tasks, like pulling from S3.
     - boto
-
-# # This is read at boottime to set the hostname.
-# - name: Read username from `whoami`.
-#   shell: whoami
-#   register: whoami_user
-#   tags: hostname
 
 # Set the hostname as specified in the inventory.
 - name: Set /etc/hostname
