@@ -2,7 +2,7 @@
 - name: Ensure python 2.7 is installed.
   raw: test -e /usr/bin/python || (yum -y update; yum -y install python)
 
-- name: Ensure pip is installed.
+- name: Ensure pip prerequisites are installed.
   include_role:
     name: geerlingguy.repo-epel
 

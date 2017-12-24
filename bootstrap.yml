@@ -1,8 +1,8 @@
 ---
 - name: Bootstrap the environment -- install dependencies and set hostname.
-  hosts: all
   become: yes
   gather_facts: yes
+  hosts: all
   tags: dependencies
   vars_files:
     - host_vars/main.yml
@@ -15,40 +15,48 @@
 # DANGER -- this is destructive. Make sure you want to totally bootstrap
 # a new ssh environment.
 - name: Create SSH users.
-  hosts: all
   become: yes
+  hosts: all
   tags: ssh
   roles:
     - ssh-users
 
 - name: Remove root access & harden box security.
-  hosts: all
   become: yes
+  hosts: all
   tags: opsec
   roles:
     - opsec
 
 - name: Set up NTP.
-  hosts: all
   become: yes
+  hosts: all
   roles:
     - bennojoy.ntp
 
 - name: Install docker.
+  become: yes
   hosts: all
   tags: docker
-  become: yes
   roles:
     - geerlingguy.docker
 
 - name: Install pip.
+  become: yes
   hosts: all
   tags: pip
-  become: yes
-  roles:
-    - geerlingguy.pip
+  tasks:
+    - include_role: name=geerlingguy.pip
+    - pip: name=pip state=latest
 
-- name: Install tmux.
+# - name: Upgrade pip.
+#   become: yes
+#   hosts: all
+#   tags: pip
+#   tasks:
+#     - pip: name=pip state=latest
+
+- name: Determine if tmux is installed and up-to-date.
   hosts: all
   become: yes
   vars_files:
@@ -56,8 +64,26 @@
   tags:
     - deps
     - tmux
-  roles:
-    - tmux
+  tasks:
+    - name: Determine tmux version, if installed.
+      shell: tmux -V | sed 's/tmux //'
+      register: tmux_version
+      ignore_errors: yes
+    - name: Install tmux.
+      include_role:
+        name: tmux
+
+# - name: Install tmux.
+#   become: yes
+#   hosts: all
+#   vars_files:
+#     - 'host_vars/main.yml'
+#   tags:
+#     - deps
+#     - tmux
+#   roles:
+#     - tmux
+#   when: not (tmux_version == '2.6')
 
 - name: Install zsh and prezto.
   hosts: all
@@ -94,3 +120,12 @@
   tags: homemaker
   roles:
     - homemaker
+
+- name: Install Go.
+  become: yes
+  hosts: all
+  tags:
+    - deps
+    - go
+  roles:
+    - joshualund.golang

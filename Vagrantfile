@@ -18,7 +18,8 @@ Vagrant.configure('2') do |config|
       ansible.playbook = 'bootstrap.yml'
       # ansible.inventory_path = './hosts/local'
       # ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
-      # ansible.tags = 'zsh'
+      # ansible.tags = 'go'
+      ansible.tags = 'homemaker'
       # ansible.verbose = 'vvv'
     end
   end

@@ -4,4 +4,5 @@
 - src: geerlingguy.docker
 - src: geerlingguy.pip
 - src: geerlingguy.repo-epel
+- src: joshualund.golang
 - src: loliee.zsh
