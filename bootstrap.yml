@@ -94,6 +94,9 @@
 
 - name: Install Go.
   become: yes
+  become_user: "{{ user }}"
+  vars_files:
+    - 'host_vars/main.yml'
   hosts: all
   tags:
     - deps
@@ -101,14 +104,16 @@
   roles:
     - joshualund.golang
 
-- name: Install GTM.
-  hosts: all
-  become: yes
-  tags:
-    - deps
-    - gtm
-  roles:
-    - gtm
+# - name: Install GTM.
+#   hosts: all
+#   become: yes
+#   vars_files:
+#     - 'host_vars/main.yml'
+#   tags:
+#     - deps
+#     - gtm
+#   roles:
+#     - gtm
 
 - name: Make yourself at home.
   gather_facts: yes

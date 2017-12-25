@@ -5,13 +5,14 @@
 
 - name: Set up git2go.
   become: yes
+  become_method: su
   become_user: "{{ user }}"
+  ignore_errors: yes
   shell: |
-    go get -d github.com/libgit2/git2go && \
-    cd "$GOPATH/src/github.com/libgit2/git2go" && \
-    git checkout next && \
+    sudo -E env "PATH=$PATH" go get -d github.com/libgit2/git2go && \
+    cd "$HOME/go/src/github.com/libgit2/git2go" && \
     git submodule update --init && \
-    sudo make install
+    sudo -E env "PATH=$PATH" make install
 
 - name: Pull GTM source.
   get_url:

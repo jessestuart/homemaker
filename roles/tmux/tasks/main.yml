@@ -16,7 +16,7 @@
   become: yes
   get_url:
     url: https://github.com/tmux/tmux/releases/download/2.6/tmux-2.6.tar.gz
-    dest: "/tmp/tmux-2.6.tar.gz"
+    dest: /tmp/tmux-2.6.tar.gz
 
 - name: Create temp installation directory.
   file:
@@ -42,4 +42,9 @@
 - name: Remove temp installation directory.
   file:
     name: /tmp/tmux-2.6
+    state: absent
+
+- name: Remove tmux tarball.
+  file:
+    name: /tmp/tmux-2.6.tar.gz
     state: absent

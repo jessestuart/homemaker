@@ -1,13 +1,15 @@
 ---
 - name: Install yarn repo.
   become: yes
-  yum_repository:
-    name: Yarn Repository
-    description: Yarn Repository
-    baseurl: https://dl.yarnpkg.com/rpm/
-    enabled: 1
-    gpgcheck: 1
-    gpgkey: https://dl.yarnpkg.com/rpm/pubkey.gpg
+  shell: |
+    yum-config-manager --add-repo=https://dl.yarnpkg.com/rpm/yarn.repo
+  # yum_repository:
+  #   name: Yarn Repository
+  #   description: Yarn Repository
+  #   baseurl: https://dl.yarnpkg.com/rpm/
+  #   enabled: 1
+  #   gpgcheck: 1
+  #   gpgkey: https://dl.yarnpkg.com/rpm/pubkey.gpg
 
 - name: Install ripgrep repo.
   become: yes
