@@ -1,0 +1,6 @@
+[ver:1,total:1740]
+roles/homemaker/tasks/main.yml:562,1514174400:152,1514178000:410,m
+roles/dotfiles/tasks/main.yml:522,1514174400:105,1514178000:417,m
+roles/rcm/tasks/main.yml:277,1514174400:188,1514178000:89,m
+roles/nvim/tasks/main.yml:227,1514174400:8,1514178000:219,m
+bootstrap.yml:152,1514174400:87,1514178000:65,m
