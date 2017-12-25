@@ -1,0 +1,31 @@
+---
+- name: Install cmake (required later on to build from source).
+  become: yes
+  yum: name=cmake
+
+- name: Set up git2go.
+  become: yes
+  become_user: "{{ user }}"
+  shell: |
+    go get -d github.com/libgit2/git2go && \
+    cd "$GOPATH/src/github.com/libgit2/git2go" && \
+    git checkout next && \
+    git submodule update --init && \
+    sudo make install
+
+- name: Pull GTM source.
+  get_url:
+    url: https://github.com/git-time-metric/gtm/archive/v1.2.11.tar.gz
+    dest: /tmp
+
+- name: Unarchive GTM tarball.
+  unarchive:
+    src: /tmp/v1.2.11.tar.gz
+    dest: /tmp
+
+- name: Install GTM.
+  become: yes
+  shell: |
+    cd /tmp/gtm-1.2.11 && \
+    make && \
+    mv gtm /usr/local/bin

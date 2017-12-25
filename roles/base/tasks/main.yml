@@ -28,14 +28,7 @@
     - python-virtualenv
     - wget
 
-# - name: Ensure required packages are installed.
-#   when: ansible_os_family == 'CentOS'
-#   yum:
-#     name: "{{ item }}" #     state: latest
-#     update_cache: yes
-#   with_items: "{{ packages.centos }}"
-
-- name: Install AWS-related packages from pip.
+- name: Install packages from pip.
   pip: "name={{ item }}"
   with_items:
     # For interacting with AWS.

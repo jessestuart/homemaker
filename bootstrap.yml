@@ -49,14 +49,7 @@
     - include_role: name=geerlingguy.pip
     - pip: name=pip state=latest
 
-# - name: Upgrade pip.
-#   become: yes
-#   hosts: all
-#   tags: pip
-#   tasks:
-#     - pip: name=pip state=latest
-
-- name: Determine if tmux is installed and up-to-date.
+- name: Ensure tmux is installed.
   hosts: all
   become: yes
   vars_files:
@@ -72,18 +65,6 @@
     - name: Install tmux.
       include_role:
         name: tmux
-
-# - name: Install tmux.
-#   become: yes
-#   hosts: all
-#   vars_files:
-#     - 'host_vars/main.yml'
-#   tags:
-#     - deps
-#     - tmux
-#   roles:
-#     - tmux
-#   when: not (tmux_version == '2.6')
 
 - name: Install zsh and prezto.
   hosts: all
@@ -111,6 +92,24 @@
         name: "{{ user }}"
         shell: /bin/zsh
 
+- name: Install Go.
+  become: yes
+  hosts: all
+  tags:
+    - deps
+    - go
+  roles:
+    - joshualund.golang
+
+- name: Install GTM.
+  hosts: all
+  become: yes
+  tags:
+    - deps
+    - gtm
+  roles:
+    - gtm
+
 - name: Make yourself at home.
   gather_facts: yes
   hosts: all
@@ -120,12 +119,3 @@
   tags: homemaker
   roles:
     - homemaker
-
-- name: Install Go.
-  become: yes
-  hosts: all
-  tags:
-    - deps
-    - go
-  roles:
-    - joshualund.golang
