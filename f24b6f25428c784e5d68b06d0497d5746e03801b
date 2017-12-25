@@ -1,0 +1,8 @@
+[ver:1,total:3000]
+roles/homemaker/tasks/main.yml:2200,1514156400:620,1514160000:1580,m
+roles/gtm/tasks/main.yml:325,1514160000:325,m
+bootstrap.yml:270,1514160000:270,m
+Vagrantfile:120,1514156400:120,m
+roles/base/tasks/main.yml:40,1514156400:40,m
+TODO.md:30,1514160000:30,r
+roles/tmux/tasks/main.yml:15,1514160000:15,r
