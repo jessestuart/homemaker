@@ -1,0 +1,5 @@
+[ver:1,total:1740]
+bootstrap.yml:1080,1514167200:300,1514170800:780,m
+roles/homemaker/tasks/main.yml:595,1514170800:595,m
+roles/nvim/tasks/main.yml:50,1514170800:50,m
+roles/tmux/tasks/main.yml:15,1514170800:15,r
