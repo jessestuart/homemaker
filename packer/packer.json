@@ -1,15 +1,24 @@
 {
+  "variables": {
+    "cpus": 2,
+    "memory": 2048
+  },
   "provisioners": [
     {
       "type": "shell",
       "execute_command":
         "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "scripts/ansible.sh"
+      "script": "scripts/install_ansible.sh"
     },
     {
       "type": "ansible-local",
-      "playbook_file": "ansible/main.yml",
-      "galaxy_file": "requirements.yml"
+      "playbook_file": "ansible/bootstrap.yml",
+      "galaxy_file": "ansible/requirements.yml"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "ansible/update_dotfiles.yml",
+      "galaxy_file": "ansible/requirements.yml"
     },
     {
       "type": "shell",
@@ -40,13 +49,13 @@
       "ssh_password": "vagrant",
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
-      "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
+      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
       "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
       "virtualbox_version_file": ".vbox_version",
       "vm_name": "homemaker-centos-7-x86_64",
       "vboxmanage": [
-        ["modifyvm", "{{.Name}}", "--memory", "2048"],
-        ["modifyvm", "{{.Name}}", "--cpus", "2"]
+        ["modifyvm", "{{.Name}}", "--memory", "{{ user `memory`}}"],
+        ["modifyvm", "{{.Name}}", "--cpus", "{{ user `cpus` }}"]
       ]
     },
   ],

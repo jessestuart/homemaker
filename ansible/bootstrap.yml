@@ -80,11 +80,19 @@
     - joshualund.golang
 
 - name: Make yourself at home.
+  become: yes
   gather_facts: yes
   hosts: all
-  become: yes
   vars_files:
     - 'host_vars/main.yml'
   tags: homemaker
   roles:
     - homemaker
+
+- name: Cleanup the cruft.
+  become: yes
+  gather_facts: yes
+  hosts: all
+  tasks:
+    - name: Remove `/vagrant` folder.
+      file: path=/vagrant state=absent

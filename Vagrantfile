@@ -13,10 +13,10 @@ Vagrant.configure('2') do |config|
     vbox.vm.box = 'centos/7'
     vbox.vm.provision 'shell', inline: 'yum -y update; yum -y install python'
     vbox.vm.provision :ansible do |ansible|
-      ansible.playbook = 'bootstrap.yml'
+      ansible.playbook = 'ansible/bootstrap.yml'
     end
     vbox.vm.provision :ansible do |ansible|
-      ansible.playbook = 'update_dotfiles.yml'
+      ansible.playbook = 'ansible/update_dotfiles.yml'
     end
   end
 
