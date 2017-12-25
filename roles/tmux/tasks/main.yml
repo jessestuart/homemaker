@@ -1,11 +1,14 @@
 ---
 - name: Determine tmux version, if installed.
-  shell: (hash tmux&>/dev/null) && tmux -V | sed 's/tmux //' || false
+  shell: tmux -V | sed 's/tmux //' || false
   ignore_errors: true
   register: tmux_version
 
+- name: End play if tmux is already up-to-date.
+  meta: end_play
+  when: tmux_version == '2.6'
+
 - name: Ensure tmux dependencies are installed.
-  when: tmux_version != '2.6'
   become: yes
   yum:
     name: "{{ item }}"
@@ -19,20 +22,17 @@
     - ncurses-devel
 
 - name: Pull down tmux 2.6 release.
-  when: tmux_version != '2.6'
   become: yes
   get_url:
     url: https://github.com/tmux/tmux/releases/download/2.6/tmux-2.6.tar.gz
     dest: /tmp/tmux-2.6.tar.gz
 
 - name: Create temp installation directory.
-  when: tmux_version != '2.6'
   file:
     name: /tmp/tmux-2.6
     state: directory
 
 - name: Unarchive tmux tarball.
-  when: tmux_version != '2.6'
   become: yes
   unarchive:
     src: /tmp/tmux-2.6.tar.gz
@@ -40,7 +40,6 @@
     remote_src: yes
 
 - name: Install tmux.
-  when: tmux_version != '2.6'
   become: yes
   shell: |
     cd /tmp/tmux-2.6 && \
@@ -50,13 +49,11 @@
     make install
 
 - name: Remove temp installation directory.
-  when: tmux_version != '2.6'
   file:
     name: /tmp/tmux-2.6
     state: absent
 
 - name: Remove tmux tarball.
-  when: tmux_version != '2.6'
   file:
     name: /tmp/tmux-2.6.tar.gz
     state: absent

@@ -29,13 +29,6 @@
   roles:
     - bennojoy.ntp
 
-- name: Ensure Docker is installed.
-  become: yes
-  hosts: all
-  tags: docker
-  roles:
-    - geerlingguy.docker
-
 - name: Ensure pip is installed.
   become: yes
   hosts: all
@@ -46,6 +39,13 @@
     - name: Also ensure pip is up-to-date.
       pip: name=pip state=latest
 
+- name: Ensure Docker is installed.
+  become: yes
+  hosts: all
+  tags: docker
+  roles:
+    - geerlingguy.docker
+
 - name: Ensure tmux is installed.
   hosts: all
   become: yes
@@ -54,14 +54,8 @@
   tags:
     - deps
     - tmux
-  tasks:
-    - name: Determine tmux version, if installed.
-      shell: tmux -V | sed 's/tmux //'
-      register: tmux_version
-      ignore_errors: yes
-    - name: Install tmux.
-      include_role:
-        name: tmux
+  roles:
+    - tmux
 
 - name: Install zsh and prezto.
   hosts: all
@@ -84,18 +78,6 @@
     - go
   roles:
     - joshualund.golang
-
-# TODO: Get this working.
-# - name: Install GTM.
-#   hosts: all
-#   become: yes
-#   vars_files:
-#     - 'host_vars/main.yml'
-#   tags:
-#     - deps
-#     - gtm
-#   roles:
-#     - gtm
 
 - name: Make yourself at home.
   gather_facts: yes

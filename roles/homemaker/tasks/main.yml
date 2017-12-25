@@ -51,12 +51,5 @@
   vars_files:
     - 'host_vars/main.yml'
 
-- name: Install dotfiles.
-  become: yes
-  tags: dotfiles
-  include_role: name=dotfiles
-  vars_files:
-    - 'host_vars/main.yml'
-
 - name: Set up neovim.
   include_role: name=nvim
