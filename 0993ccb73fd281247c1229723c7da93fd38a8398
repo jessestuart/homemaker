@@ -1,0 +1,5 @@
+[ver:1,total:2820]
+roles/gtm/tasks/main.yml:1500,1514163600:1020,1514167200:480,m
+bootstrap.yml:980,1514163600:660,1514167200:320,m
+roles/homemaker/tasks/main.yml:240,1514167200:240,m
+roles/tmux/tasks/main.yml:100,1514167200:100,m
