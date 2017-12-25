@@ -1,0 +1,6 @@
+[ver:1,total:3720]
+roles/tmux/tasks/main.yml:1445,1514178000:220,1514181600:1100,1514185200:125,m
+roles/rcm/tasks/main.yml:870,1514185200:870,m
+roles/nvim/tasks/main.yml:850,1514181600:20,1514185200:830,m
+roles/dotfiles/tasks/main.yml:540,1514178000:140,1514181600:140,1514185200:260,m
+roles/homemaker/tasks/main.yml:15,1514185200:15,r
