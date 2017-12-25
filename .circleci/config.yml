@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /home/linux-dev-workstation
     docker:
-      - image: pdouble16/vagrant-build-base:latest
+      - image: jessestuart/vagrant-build-base:latest
         user: root
 
     steps:

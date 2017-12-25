@@ -1,7 +1,7 @@
 {
   "variables": {
-    "cpus": 2,
-    "memory": 2048
+    "cpus": "2",
+    "memory": "2048"
   },
   "provisioners": [
     {
@@ -57,7 +57,7 @@
         ["modifyvm", "{{.Name}}", "--memory", "{{ user `memory`}}"],
         ["modifyvm", "{{.Name}}", "--cpus", "{{ user `cpus` }}"]
       ]
-    },
+    }
   ],
   "post-processors": [
     {

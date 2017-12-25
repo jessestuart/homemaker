@@ -2,3 +2,4 @@
 .DS_Store
 .gtm/
 .vagrant
+packer_cache/
