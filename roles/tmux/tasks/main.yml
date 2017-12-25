@@ -12,6 +12,7 @@
     state: latest
     update_cache: yes
   with_items:
+    - gcc
     - libevent
     - libevent-devel
     - ncurses

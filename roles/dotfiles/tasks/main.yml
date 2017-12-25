@@ -12,7 +12,7 @@
   when: not dotfiles_dir.stat.exists
   file:
     path: "$HOME/dotfiles"
-    state: present
+    state: directory
 
 - name: Pull dotfiles.
   become: yes
