@@ -8,3 +8,17 @@ Vagrantfile:500,1513594800:440,1513598400:60,m
 genkeys.sh:180,1513594800:180,d
 .gitignore:120,1513598400:120,m
 roles/opsec/tasks/main.yml:30,1513594800:30,r
+
+[ver:1,total:0]
+
+[ver:1,total:3180]
+Dockerfile:2350,1513594800:1330,1513598400:1020,m
+Vagrantfile:500,1513594800:440,1513598400:60,m
+genkeys.sh:180,1513594800:180,d
+.gitignore:120,1513598400:120,m
+roles/opsec/tasks/main.yml:30,1513594800:30,r
+
+[ver:1,total:900]
+Dockerfile:600,1513602000:600,m
+keys/vagrantssh.key.pub:180,1513605600:180,r
+Vagrantfile:120,1513605600:120,m

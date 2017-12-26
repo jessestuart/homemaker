@@ -1,1 +1,8 @@
 [ver:1,total:0]
+
+[ver:1,total:960]
+.git/COMMIT_EDITMSG:420,1513810800:240,1513814400:180,r
+bootstrap.yml:300,1513810800:300,m
+Vagrantfile:195,1513810800:195,m
+roles/base/tasks/ubuntu.yml:30,1513810800:30,r
+Dockerfile:15,1513810800:15,r
