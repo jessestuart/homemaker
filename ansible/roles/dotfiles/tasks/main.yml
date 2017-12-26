@@ -18,13 +18,14 @@
   become: yes
   become_user: "{{ user }}"
   tags: rcm
+  when: not dotfiles_dir.stat.exists
   git:
     repo: https://github.com/jessestuart/dotfiles
     dest: "$HOME/dotfiles"
     force: yes
-  when: not dotfiles_dir.stat.exists
 
 - name: UNLEASH THE DOTFILES!
   become: yes
   become_user: "{{ user }}"
-  command: rcup -d "$HOME/dotfiles"
+  shell: rcup -d "$HOME/dotfiles"
+  ignore_errors: yes

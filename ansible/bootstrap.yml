@@ -89,6 +89,14 @@
   roles:
     - homemaker
 
+- name: Install dotfiles.
+  hosts: all
+  become: yes
+  vars_files:
+    - 'host_vars/main.yml'
+  roles:
+    - dotfiles
+
 - name: Cleanup the cruft.
   become: yes
   gather_facts: yes
