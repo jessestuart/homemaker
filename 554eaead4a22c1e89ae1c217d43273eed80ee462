@@ -1,0 +1,4 @@
+[ver:1,total:540]
+ansible/roles/base/tasks/main.yml:375,1514394000:375,m
+ansible/bootstrap.yml:105,1514394000:105,r
+.circleci/config.yml:60,1514394000:60,m
