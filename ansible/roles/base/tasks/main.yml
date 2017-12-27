@@ -38,18 +38,3 @@
     # Boto is needed to perform some AWS tasks, like pulling from S3.
     - boto
 
-# Set the hostname as specified in the inventory.
-- name: Set /etc/hostname
-  become: yes
-  tags: hostname
-  hostname: name="{{ hostname }}"
-
-# This is required to be in sync because many commands, such as sudo,
-# may fail otherwise.
-- name: Register hostname in /etc/hosts
-  tags: hostname
-  lineinfile:
-    state: present
-    dest: /etc/hosts
-    regexp: '127.0.0.1'
-    line: "127.0.0.1 localhost {{ hostname }}"

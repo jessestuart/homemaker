@@ -20,6 +20,8 @@
   become: yes
   hosts: all
   tags: opsec
+  vars_files:
+    - host_vars/main.yml
   roles:
     - opsec
 
