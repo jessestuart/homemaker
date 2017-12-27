@@ -1,6 +1,6 @@
+*.box
 *.retry
 .DS_Store
 .gtm/
 .vagrant
 packer_cache/
-*.box
