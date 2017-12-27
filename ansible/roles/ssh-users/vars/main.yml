@@ -1,11 +1,8 @@
-
 ---
-# User definitions (called for all boxes). Change state to "absent" to force
-# removal of a user.
-###
-### WARNING: Users are only deleted if you mark them as "absent"!
-###
+# User definitions (called for all boxes).
+# Change state to "absent" to force removal of a user.
 ssh_users:
+  # yamllint disable
   # # `pi` is the substitute for root login.
   # - name: pi
   #   state: present
@@ -20,3 +17,4 @@ ssh_users:
     custom_home: false
     shell: /bin/bash
     public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3JZwbsMzqmsEQvYVhm+Q1NyE/O/G64xd6s2CuiRld+2PYZimUdZ/Bo0c/oBpiNtpBzWre/cOFjzlBg494hhZKT7IzCfL6DVRiTVj6S3WATkzeXTM2va5IvH5L8YRs0y11jL3nXKB3RO3hANjWnxdGH3N8+BILaTD7q5XX41fKwH5bLhppLppzPFyUUvZfUA01OOczFX1fQhDp2KYrl1j7rEXWAMQT6rUsqawDWaCXtveqaNDN+1NKm//6/IaO11F3zj9LBH1+isYJVTD6N7+ihCcBfmu5xKDw1/lM6DtalGZy6UlNfp5QqnTUsMuMkSf12lhT0hYrp8MfIn7Qklrl
+  # yamllint enable

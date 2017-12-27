@@ -1,6 +1,8 @@
 ---
 - name: Ensure python 2.7 is installed.
-  raw: test -e /usr/bin/python || (yum -y update; yum -y install python) creates=/usr/bin/python
+  raw: |
+    test -e /usr/bin/python || (yum -y update; yum -y install python)
+    creates=/usr/bin/python
 
 - name: Ensure pip prerequisites are installed.
   include_role:
@@ -38,13 +40,14 @@
 
 # Set the hostname as specified in the inventory.
 - name: Set /etc/hostname
+  become: yes
   tags: hostname
-  hostname:
-    name: "{{ hostname }}"
+  hostname: name="{{ hostname }}"
 
 # This is required to be in sync because many commands, such as sudo,
 # may fail otherwise.
 - name: Register hostname in /etc/hosts
+  tags: hostname
   lineinfile:
     state: present
     dest: /etc/hosts

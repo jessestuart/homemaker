@@ -9,7 +9,9 @@
 - name: Set users to add when specified
   set_fact:
     users_list:
-      - "{{ ssh_users | selectattr('name', 'match', lookup('env','USER')) | first }}"
+      - "{{ ssh_users | \
+            selectattr('name', 'match', lookup('env','USER')) |
+            first }}"
       - "{{ ssh_users | selectattr('name', 'match', 'ubuntu') | first }}"
   when: self_only is defined
 
@@ -54,7 +56,7 @@
     recursive: yes
     perms: yes
   when: >
-    (item[state_key] == 'present') and (item.custom_home)
+    (item[state_key] == "present") and (item.custom_home)
   with_items: "{{ users_list }}"
   tags:
     - rsync
@@ -67,7 +69,7 @@
     owner: "{{ item.name }}"
     group: "{{ item.name }}"
   when: >
-    (item[state_key] == 'present') and (item.custom_home)
+    (item[state_key] == "present") and (item.custom_home)
   with_items: "{{ users_list }}"
   tags:
     - rsync
@@ -96,12 +98,12 @@
     regexp: "{{ item.name }} .*"
     line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
     validate: 'visudo -cf %s'
-  when: (item[state_key] == 'present') and (item.is_sudoer)
+  when: (item[state_key] == "present") and (item.is_sudoer)
   with_items: "{{ users_list }}"
 
 - name: Remove sudoers files for absent users or non sudoers
   file: path=/etc/sudoers.d/{{ item.name }} state=absent
-  when: (item[state_key] == 'absent') or (not item.is_sudoer)
+  when: (item[state_key] == "absent") or (not item.is_sudoer)
   with_items: "{{ users_list }}"
   tags:
     - remove

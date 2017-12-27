@@ -13,6 +13,7 @@
 - name: Install ripgrep repo.
   become: yes
   shell: |
+    # yamllint disable-line
     yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
 
 - name: Install IUS (Inline with Upstream Stable).

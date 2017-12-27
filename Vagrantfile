@@ -31,9 +31,12 @@ Vagrant.configure('2') do |config|
       # There is no newline after the existing insecure key, so the new key
       # ends up on the same line and breaks SSH.
       override.ssh.insert_key = false
-      override.ssh.proxy_command = "docker run -i --rm --link homemaker alpine/socat - TCP:homemaker:22,retry=3,interval=2"
+      override.ssh.proxy_command = "\
+        docker run -i --rm --link homemaker alpine/socat - \
+          TCP:homemaker:22,retry=3,interval=2
+      "
       d.image = "jdeathe/centos-ssh:centos-7-2.2.3"
-      d.name = "linux-dev-workstation"
+      d.name = "homemaker"
       d.remains_running = true
       d.has_ssh = true
       d.force_host_vm = false
@@ -51,10 +54,10 @@ Vagrant.configure('2') do |config|
       "ps aux | grep 'sshd:' | awk '{print $2}' | xargs kill"
     docker.vm.provision 'shell', inline: 'yum -y update; yum -y install rsync python2-dev'
     docker.vm.provision :ansible do |ansible|
-      ansible.playbook = 'bootstrap.yml'
+      ansible.playbook = 'ansible/bootstrap.yml'
     end
     docker.vm.provision :ansible do |ansible|
-      ansible.playbook = 'update_dotfiles.yml'
+      ansible.playbook = 'ansible/update_dotfiles.yml'
     end
   end
 
