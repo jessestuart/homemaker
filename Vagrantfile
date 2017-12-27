@@ -15,9 +15,6 @@ Vagrant.configure('2') do |config|
     vbox.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
     end
-    vbox.vm.provision :ansible do |ansible|
-      ansible.playbook = 'ansible/update_dotfiles.yml'
-    end
   end
 
   # ====================================
@@ -52,12 +49,9 @@ Vagrant.configure('2') do |config|
     docker.vm.synced_folder ".", "/vagrant", disabled: true
     config.vm.provision "shell", inline:
       "ps aux | grep 'sshd:' | awk '{print $2}' | xargs kill"
-    docker.vm.provision 'shell', inline: 'yum -y update; yum -y install rsync python2-dev'
+    docker.vm.provision 'shell', inline: 'yum -y update; yum -y install rsync python ansible'
     docker.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
-    end
-    docker.vm.provision :ansible do |ansible|
-      ansible.playbook = 'ansible/update_dotfiles.yml'
     end
   end
 
