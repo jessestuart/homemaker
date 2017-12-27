@@ -20,14 +20,18 @@
   become: yes
   hosts: all
   tags: opsec
+  vars_files:
+    - host_vars/main.yml
   roles:
     - opsec
 
-- name: Set up NTP.
-  become: yes
-  hosts: all
-  roles:
-    - bennojoy.ntp
+# - name: Set up NTP.
+#   gather_facts: yes
+#   become: yes
+#   hosts: all
+#   when: ansible_virtualization_type != 'docker'
+#   roles:
+#     - bennojoy.ntp
 
 - name: Ensure pip is installed and up-to-date.
   become: yes
@@ -47,6 +51,7 @@
     - docker
   roles:
     - geerlingguy.docker
+  ignore_errors: yes
 
 - name: Ensure tmux is installed.
   hosts: all
@@ -107,3 +112,5 @@
   tasks:
     - name: Remove `/vagrant` folder.
       file: path=/vagrant state=absent
+    - name: Remove unused packages.
+      command: yum clean all

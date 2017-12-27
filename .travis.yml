@@ -1,0 +1,16 @@
+---
+sudo: required
+env:
+  - CONTAINER_ID=$(mktemp)
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get update
+  - sudo docker pull bertvv/ansible-testing:centos_7
+
+script:
+  - sudo docker run --detach --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v "${PWD}":/etc/ansible/roles/role_under_test:ro bertvv/ansible-testing:centos_7 /usr/sbin/init > "${CONTAINER_ID}"
+  - sudo docker exec "$(cat ${CONTAINER_ID})" ansible-playbook /etc/ansible/test.yml --syntax-check
+  - sudo docker exec "$(cat ${CONTAINER_ID})" ansible-playbook /etc/ansible/test.yml

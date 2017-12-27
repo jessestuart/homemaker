@@ -1,10 +1,17 @@
 ---
-- name: Ensure python 2.7 is installed.
-  raw: test -e /usr/bin/python || (yum -y update; yum -y install python) creates=/usr/bin/python
-
-- name: Ensure pip prerequisites are installed.
+- name: Ensure CentOS EPEL repos are available.
   include_role:
     name: geerlingguy.repo-epel
+
+- name: Ensure IUS (Inline with Upstream Stable) is available.
+  yum:
+    name: https://centos7.iuscommunity.org/ius-release.rpm
+    state: present
+
+- name: Ensure python 2.7 is installed.
+  raw: |
+    test -e /usr/bin/python || (yum -y update; yum -y install python)
+    creates=/usr/bin/python
 
 - name: Ensure pip is installed.
   include_role:
@@ -31,22 +38,5 @@
 - name: Install packages from pip.
   pip: "name={{ item }}"
   with_items:
-    # For interacting with AWS.
     - awscli
-    # Boto is needed to perform some AWS tasks, like pulling from S3.
     - boto
-
-# Set the hostname as specified in the inventory.
-- name: Set /etc/hostname
-  tags: hostname
-  hostname:
-    name: "{{ hostname }}"
-
-# This is required to be in sync because many commands, such as sudo,
-# may fail otherwise.
-- name: Register hostname in /etc/hosts
-  lineinfile:
-    state: present
-    dest: /etc/hosts
-    regexp: '127.0.0.1'
-    line: "127.0.0.1 localhost {{ hostname }}"
