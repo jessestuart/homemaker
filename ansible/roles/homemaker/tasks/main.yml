@@ -1,4 +1,10 @@
 ---
+- name: Ensure yum-utils are installed.
+  description: |
+    This is required on some providers for the `yum-config-manager` command
+    to be present.
+  yum: name=yum-utils state=latest
+
 - name: Install yarn repo.
   become: yes
   shell: |
@@ -34,22 +40,21 @@
     - rsync
     - yarn
 
-- name: Own `node_modules`
-  become: yes
-  shell: "chown -R {{ user }} /usr/lib/node_modules"
+# - name: Own `node_modules`
+#   become: yes
+#   shell: "chown -R {{ user }} /usr/lib/node_modules"
 
-- name: Start docker daemon at boot.
-  systemd:
-    name: docker
-    enabled: yes
-  when: ansible_distribution == 'CentOS'
+# - name: Start docker daemon at boot.
+#   systemd:
+#     name: docker
+#     enabled: yes
+#   when: ansible_distribution == 'CentOS'
 
 - name: Install RCM to manage dotfiles.
   become: yes
-  include_role: name=rcm
   tags: rcm
-  vars_files:
-    - 'host_vars/main.yml'
+  vars_files: 'host_vars/main.yml'
+  include_role: name=rcm
 
 - name: Set up neovim.
   include_role: name=nvim

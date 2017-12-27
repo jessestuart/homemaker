@@ -1,6 +1,6 @@
 ---
 - name: Ensure python 2.7 is installed.
-  raw: test -e /usr/bin/python || (yum -y update; yum -y install python)
+  raw: test -e /usr/bin/python || (yum -y update; yum -y install python) creates=/usr/bin/python
 
 - name: Ensure pip prerequisites are installed.
   include_role:

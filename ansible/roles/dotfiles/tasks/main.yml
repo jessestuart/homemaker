@@ -2,8 +2,7 @@
 - name: Determine if dotfiles directory exists.
   become: yes
   become_user: "{{ user }}"
-  stat:
-    path: "$HOME/dotfiles"
+  stat: path="$HOME/dotfiles"
   register: dotfiles_dir
 
 - name: Create dotfiles directory.
@@ -17,8 +16,6 @@
 - name: Pull dotfiles.
   become: yes
   become_user: "{{ user }}"
-  tags: rcm
-  when: not dotfiles_dir.stat.exists
   git:
     repo: https://github.com/jessestuart/dotfiles
     dest: "$HOME/dotfiles"

@@ -4,14 +4,14 @@
   },
   "builders": [
     {
-      "type": "vultr",
       "api_key": "{{user `vultr_api_key`}}",
-      "description": "My Awesome App",
-      "region_name": "Chicago",
+      "description": "Homemaker Vultr box.",
+      "os_name": "CentOS 7 x64",
       "plan_name": "1024 MB RAM,25 GB SSD,1.00 TB BW",
-      "os_name": "CentOS 7.4 x64",
+      "region_name": "Chicago",
+      "shutdown_command": "/usr/sbin/shutdown -P now",
       "ssh_username": "root",
-      "shutdown_command": "/usr/sbin/shutdown -P now"
+      "type": "vultr"
     }
   ],
   "provisioners": [

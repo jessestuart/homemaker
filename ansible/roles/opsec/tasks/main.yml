@@ -1,7 +1,9 @@
 ---
+# ====================================================================
+# To protect against man-in-the-middle attacks, at least use the local
+# (control) machine to find the right github RSA public key.
+# ====================================================================
 - name: Ensure GitHub is a known host
-  # To protect against man-in-the-middle attacks, at least use the local
-  # (control) machine to find the right github RSA public key.
   lineinfile:
     dest: /etc/ssh/ssh_known_hosts
     create: yes
@@ -9,7 +11,9 @@
     line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
     regexp: "^github\\.com"
 
-# Accept SSH env variables for AWS CLI
+# =====================================
+# Accept SSH env variables for AWS CLI.
+# =====================================
 - name: Add AcceptEnv to /etc/ssh/sshd_config
   lineinfile:
     dest: /etc/ssh/sshd_config
@@ -20,16 +24,16 @@
   notify:
     - Restart ssh service
 
-- name: Remove root public keys
-  file:
-    state: absent
-    path: /root/.ssh/authorized_keys
+# - name: Remove root public keys
+#   file:
+#     state: absent
+#     path: /root/.ssh/authorized_keys
 
-- name: Deny root login
-  lineinfile:
-    state: present
-    dest: /etc/ssh/sshd_config
-    regexp: PermitRootLogin
-    line: 'PermitRootLogin no'
-  notify:
-    - Restart ssh service
+# - name: Deny root login
+#   lineinfile:
+#     state: present
+#     dest: /etc/ssh/sshd_config
+#     regexp: PermitRootLogin
+#     line: 'PermitRootLogin no'
+#   notify:
+#     - Restart ssh service

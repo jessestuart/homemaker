@@ -29,7 +29,7 @@
   roles:
     - bennojoy.ntp
 
-- name: Ensure pip is installed.
+- name: Ensure pip is installed and up-to-date.
   become: yes
   hosts: all
   tags: pip
@@ -42,7 +42,9 @@
 - name: Ensure Docker is installed.
   become: yes
   hosts: all
-  tags: docker
+  tags:
+    - dependencies
+    - docker
   roles:
     - geerlingguy.docker
 
@@ -52,7 +54,7 @@
   vars_files:
     - 'host_vars/main.yml'
   tags:
-    - deps
+    - dependencies
     - tmux
   roles:
     - tmux
@@ -60,11 +62,11 @@
 - name: Install zsh and prezto.
   hosts: all
   become: yes
-  tags:
-    - deps
-    - zsh
   vars_files:
     - 'host_vars/main.yml'
+  tags:
+    - dependencies
+    - zsh
   roles:
     - zsh
 
@@ -74,7 +76,7 @@
     - 'host_vars/main.yml'
   hosts: all
   tags:
-    - deps
+    - dependencies
     - go
   roles:
     - joshualund.golang
@@ -94,6 +96,7 @@
   become: yes
   vars_files:
     - 'host_vars/main.yml'
+  tags: dotfiles
   roles:
     - dotfiles
 
