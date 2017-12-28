@@ -25,11 +25,13 @@
   roles:
     - opsec
 
-- name: Set up NTP.
-  become: yes
-  hosts: all
-  roles:
-    - bennojoy.ntp
+# - name: Set up NTP.
+#   gather_facts: yes
+#   become: yes
+#   hosts: all
+#   when: ansible_virtualization_type != 'docker'
+#   roles:
+#     - bennojoy.ntp
 
 - name: Ensure pip is installed and up-to-date.
   become: yes
