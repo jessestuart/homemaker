@@ -1,0 +1,6 @@
+[ver:1,total:2580]
+ansible/roles/opsec/tasks/main.yml:2070,1514412000:1920,1514415600:150,m
+ansible/bootstrap.yml:420,1514412000:60,1514415600:360,m
+ansible/roles/base/tasks/main.yml:50,1514412000:20,1514415600:30,r
+.circleci/config.yml:20,1514412000:20,r
+Vagrantfile:20,1514412000:20,r
