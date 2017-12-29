@@ -13,8 +13,6 @@ jobs:
           name: Validate Vagrantfile
           command: vagrant validate
 
-      - setup_remote_docker
-
       - run:
           name: Link cache.
           command: |
