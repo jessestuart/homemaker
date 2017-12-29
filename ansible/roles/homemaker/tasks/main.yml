@@ -5,21 +5,16 @@
     to be present.
   yum: name=yum-utils state=latest
 
-- name: Install yarn repo.
+- name: Ensure yarn repo is installed.
   become: yes
   shell: |
     yum-config-manager --add-repo=https://dl.yarnpkg.com/rpm/yarn.repo
 
-- name: Install ripgrep repo.
-  become: yes
-  shell: |
-    # yamllint disable-line
-    yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
-
-- name: Install IUS (Inline with Upstream Stable).
-  yum:
-    name: https://centos7.iuscommunity.org/ius-release.rpm
-    state: present
+# - name: Ensure ripgrep repo is installed.
+#   become: yes
+#   shell: |
+#     # yamllint disable-line
+#     yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
 
 - name: Install python 3.
   yum:
@@ -41,9 +36,9 @@
     - rsync
     - yarn
 
-# - name: Own `node_modules`
-#   become: yes
-#   shell: "chown -R {{ user }} /usr/lib/node_modules"
+- name: Own `node_modules`
+  become: yes
+  shell: "chown -R {{ user }} /usr/lib/node_modules"
 
 # - name: Start docker daemon at boot.
 #   systemd:

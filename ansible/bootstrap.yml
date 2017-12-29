@@ -111,3 +111,5 @@
   tasks:
     - name: Remove `/vagrant` folder.
       file: path=/vagrant state=absent
+    - name: Remove unused packages.
+      command: yum clean all

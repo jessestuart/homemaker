@@ -3,33 +3,37 @@ version: 2
 jobs:
   build:
     working_directory: ~/homemaker
-    docker:
-      - image: jessestuart/vagrant-build-base
-        user: root
-    environment:
-      - PACKAGES: "ansible build-essential curl dkms python sudo wget"
+    machine: true
+
     steps:
       - checkout
-
-      - setup_remote_docker
 
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "Vagrantfile" }}
-      - run:
-          command: |
-            vagrant validate
+            - v1-dependencies-
 
       - run:
           command: |
-            apt-get update -y
-            apt-get install -y $PACKAGES linux-headers-$(uname -r)
+            # Add apt-key sources for virtualbox.
+            sudo apt-get -y update && apt-get -y install sudo wget curl \
+            wget -q -O - http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | apt-key add -
+            echo "deb http://download.virtualbox.org/virtualbox/debian precise non-free contrib" >> /etc/apt/sources.list.d/virtualbox.org.lists
+            # Install the bare-minimum dependencies to allow us to connect
+            # via Ansible, even in CI.
+            sudo apt-get update -y
+            sudo apt-get install -y linux-headers-$(uname -r) build-essential virtualbox dkms python ansible
 
+            wget http://download.virtualbox.org/virtualbox/4.3.36/Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack -O /tmp/Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack
+            sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack
+            wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb -O /tmp/vagrant_2.0.1_x86_64.deb
+            sudo dpkg -i vagrant_2.0.1_x86_64.deb
+
+      - run:
+          command: ansible-galaxy install -r ansible/requirements.yml
 
       # The 'test' here is that Vagrant can build the box. We should add more
       # steps after this to ensure the software we installed is in working
       # order.
       - run:
-          name: Test Vagrant Up
-          command: |
-            vagrant up default --provision
+          command: vagrant up default --provision
