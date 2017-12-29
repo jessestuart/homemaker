@@ -1,5 +1,7 @@
 ## Homemaker
 
+[![SemaphoreCI Build Status][semaphoreci-badge]][semaphoreci-link]
+
 `homemaker` is a tool composing [Vagrant][vagrant-url], [Packer][packer-url],
 and [Ansible][ansible-url] to automate the creation of machine environments
 that "feel like home".
@@ -104,3 +106,5 @@ Homemaker is still a work in progress. Shortcomings I plan on improving upon:
 [packer-url]: https://github.com/hashicorp/packer
 [vagrant-url]: https://github.com/hashicorp/vagrant
 [vagrant-installation]: https://www.vagrantup.com/downloads.html
+[semaphoreci-badge]: https://semaphoreci.com/api/v1/jesses/homemaker/branches/jesse-add_circleci/badge.svg
+[semaphoreci-link]: https://semaphoreci.com/jesses/homemaker
