@@ -10,11 +10,11 @@
   shell: |
     yum-config-manager --add-repo=https://dl.yarnpkg.com/rpm/yarn.repo
 
-# - name: Ensure ripgrep repo is installed.
-#   become: yes
-#   shell: |
-#     # yamllint disable-line
-#     yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
+- name: Ensure ripgrep repo is installed.
+  become: yes
+  shell: |
+    # yamllint disable-line
+    yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
 
 - name: Install python 3.
   yum:

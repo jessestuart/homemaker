@@ -10,6 +10,9 @@ jobs:
       - checkout
 
       - run:
+        command: uname -a
+
+      - run:
           name: Link cache.
           command: |
             set -x
@@ -33,8 +36,8 @@ jobs:
 
       - run:
           command: |
-            chmod a+rx scripts/provisioner.sh
-            ./scripts/provisioner.sh
+            chmod a+rx ./.circleci/provision.sh
+            sudo ./.circleci/provision.sh
 
       - run:
           name: Validate Vagrantfile
@@ -42,12 +45,12 @@ jobs:
 
       - run:
           command: |
-            vagrant up docker
+            vagrant up --provision
 
-#       - save_cache:
-#           keys:
-#             - v1-vagrant-{{ .Branch }}-{{ .Revision }}
-#             - v1-vagrant-{{ .Branch }}-
-#             - v1-vagrant-
-#           paths:
-#             - /home/vagrant/.vagrant/machines/default/cache
+      - save_cache:
+          keys:
+            - v1-vagrant-{{ .Branch }}-{{ .Revision }}
+            - v1-vagrant-{{ .Branch }}-
+            - v1-vagrant-
+          paths:
+            - /home/vagrant/.vagrant/machines/default/cache
