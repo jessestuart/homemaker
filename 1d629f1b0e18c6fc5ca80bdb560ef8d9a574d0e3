@@ -1,0 +1,4 @@
+[ver:1,total:1920]
+Vagrantfile:1260,1514502000:240,1514505600:1020,m
+.circleci/config.yml:645,1514505600:645,m
+scripts/install-ansible-dependencies.sh:15,1514505600:15,r
