@@ -40,20 +40,6 @@ Vagrant.configure('2') do |config|
     end
   end
 
-  config.vm.define 'ci', autostart: true do |vbox|
-    vbox.vm.provider 'virtualbox' do |v|
-      v.memory = 2048
-      v.cpus = 2
-    end
-
-    vbox.vm.box = "ubuntu/xenial64"
-
-    vbox.vm.provision 'shell', inline: 'apt-get -y update; apt-get -y install python'
-    vbox.vm.provision :ansible do |ansible|
-      ansible.playbook = 'ansible/bootstrap.yml'
-    end
-	end
-
   # ====================================
   # Definitions for the Docker container
   # ====================================
