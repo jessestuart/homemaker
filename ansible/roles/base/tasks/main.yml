@@ -5,8 +5,6 @@
     creates=/usr/bin/python
 
 - name: Ensure pip prerequisites are installed.
-	gather_facts: true
-	when: ansible_distribution == 'CentOS'
   include_role:
     name: geerlingguy.repo-epel
 
