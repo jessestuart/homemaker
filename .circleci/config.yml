@@ -4,25 +4,33 @@ jobs:
   build:
     working_directory: /home/linux-dev-workstation
     docker:
-      - image: ubuntu:xenial
+      - image: jessestuart/phusion-baseimage
         user: root
 
     steps:
       - checkout
       - setup_remote_docker
 
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Vagrantfile" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
       - run:
           command: |
+            # Add apt-key sources for virtualbox.
             wget -q -O - http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | sudo apt-key add -
             sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian precise non-free contrib" >> /etc/apt/sources.list.d/virtualbox.org.list'
+            # Install the bare-minimum dependencies to allow us to connect
+            # via Ansible, even in CI.
             sudo apt-get update -y
             sudo apt-get install -y linux-headers-$(uname -r) build-essential virtualbox dkms python ansible
-            pushd /tmp
-            wget http://download.virtualbox.org/virtualbox/4.3.36/Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack
+
+            wget http://download.virtualbox.org/virtualbox/4.3.36/Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack -O /tmp/Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack
             sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack
-            wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
+            wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb -O /tmp/vagrant_2.0.1_x86_64.deb
             sudo dpkg -i vagrant_2.0.1_x86_64.deb
-            popd
 
       - run:
           command: |
@@ -34,4 +42,117 @@ jobs:
       - run:
           name: Test Vagrant Up
           command: |
-            vagrant up ci --provision
+            vagrant up default --provision
+
+---
+version: 2
+
+jobs:
+  build:
+    working_directory: /home/vagrant
+    docker:
+      - image: jessestuart/vagrant-build-base:latest
+        user: root
+
+    steps:
+      - checkout
+
+      - run:
+          name: Validate Vagrantfile
+          command: |
+            vagrant validate
+
+      - setup_remote_docker
+
+      - run:
+          name: Link cache.
+          command: |
+            set -x
+            if [ -z "$CIRCLE_BUILD_NUM" ]; then
+              mkdir -p /home/vagrant/cache/vagrant
+              ln -sf  /home/vagrant/cache/vagrant \
+                /home/vagrant/.vagrant/machines/default/cache
+            fi
+
+      # This cache is produced by the vagrant-cachier plugin. It created a
+      # synced folder named /tmp/vagrant-cache that primarily holds OS
+      # packages, but this project also keeps other large downloads there. The
+      # cache key includes the revision because any of the Vagrantfile or
+      # Ansible files can influence the cache.  The second key will reuse the
+      # cache from a previous build.
+      - restore_cache:
+          keys:
+            - v1-vagrant-{{ .Branch }}-{{ .Revision }}
+            - v1-vagrant-{{ .Branch }}-
+            - v1-vagrant-
+
+      - run:
+          command: |
+            vagrant up docker
+
+      - save_cache:
+          key: v1-vagrant-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - /home/vagrant/.vagrant/machines/default/cache
+
+
+      # This cache is for the docker images. Layer caching is early, we use a
+      # tarball created by `docker save` to cache our images.
+      # - restore_cache:
+      #     keys:
+      #       - v1-dockerimage-{{ .Branch }}-{{ checksum "Vagrantfile" }}}
+      #       - v1-dockerimage-{{ .Branch }}-
+      #       - v1-dockerimage-
+
+      # This cache is produced by the vagrant-cachier plugin. It created a
+      # synced folder named /tmp/vagrant-cache that primarily holds OS
+      # packages, but this project also keeps other large downloads there.  The
+      # cache key includes the revision because any of the Vagrantfile or
+      # Puppet files can influence the cache.  The second key will reuse the
+      # cache from a previous build.
+      # - restore_cache:
+      #     keys:
+      #       - v1-vagrant-{{ .Branch }}-{{ .Revision }}
+      #       - v1-vagrant-{{ .Branch }}-
+      #       - v1-vagrant-
+
+      # - run:
+      #     name: Restore Docker Public Image Cache
+      #     command: |
+      #       set -x
+      #       if [[ -e /home/vagrant/cache/docker/image.tar ]]; then
+      #         docker load -i /home/vagrant/cache/docker/image.tar
+      #       fi
+
+      # The 'test' here is that Vagrant can build the box. We should add more
+      # steps after this to ensure the software we installed is in working
+      # order.  We are adding '--provision' for testing locally and iterating
+      # - run:
+      #     name: Test Vagrant Up
+      #     command: |
+      #       vagrant up --provider docker --provision
+
+      # - run:
+      #     name: Build Docker Public Image Cache
+      #     command: |
+      #       set -x
+      #       mkdir -p /home/vagrant/cache/docker
+      #       docker save \
+      #       $(docker images | grep -v 'REPOSITORY\|none' | cut -d ' ' -f 1) > \
+      #       /home/vagrant/cache/docker/image.tar
+
+      # - save_cache:
+      #     key: v1-dockerimage-{{ .Branch }}-{{ checksum "Vagrantfile" }}
+      #     paths:
+      #       - /home/vagrant/cache/docker
+
+      # We must use rsync for synced folder because circleci remote docker
+      # cannot do volume mapping. We need to copy the cached files back into
+      # this container for storing in the cache.
+      # - run:
+      #     name: Copy Vagrant Cache
+      #     command: |
+      #       set -x
+      #       rm -rf /home/vagrant/.vagrant/machines/default/cache
+      #       docker cp vagrant:/tmp/vagrant-cache \
+      #       /home/vagrant/.vagrant/machines/default/cache
