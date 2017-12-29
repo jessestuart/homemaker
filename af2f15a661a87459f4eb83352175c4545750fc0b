@@ -1,0 +1,4 @@
+[ver:1,total:300]
+.circleci/config.yml:120,1514556000:120,m
+.circleci/provision.sh:120,1514556000:120,r
+Vagrantfile:60,1514556000:60,r
