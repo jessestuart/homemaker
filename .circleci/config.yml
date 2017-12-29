@@ -39,10 +39,10 @@ jobs:
           command: |
             vagrant up docker
 
-      - save_cache:
-          keys:
-            - v1-vagrant-{{ .Branch }}-{{ .Revision }}
-            - v1-vagrant-{{ .Branch }}-
-            - v1-vagrant-
-          paths:
-            - /home/vagrant/.vagrant/machines/default/cache
+#       - save_cache:
+#           keys:
+#             - v1-vagrant-{{ .Branch }}-{{ .Revision }}
+#             - v1-vagrant-{{ .Branch }}-
+#             - v1-vagrant-
+#           paths:
+#             - /home/vagrant/.vagrant/machines/default/cache

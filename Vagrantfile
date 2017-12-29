@@ -16,8 +16,7 @@ Vagrant.configure('2') do |config|
     if Vagrant.has_plugin?("vagrant-cachier")
       # Configure cached packages to be shared between instances of the same
       # base box. More info on http://fgrehm.viewdocs.io/vagrant-cachier/usage
-			config.cache.scope = :box
-			config.vm.network "private_network", type: "dhcp"
+      config.cache.scope = :box
 
       # OPTIONAL: If you are using VirtualBox, you might want to use that to
       # enable NFS for shared folders. This is also very useful for
@@ -73,8 +72,8 @@ Vagrant.configure('2') do |config|
     docker.vm.synced_folder ".", "/vagrant", disabled: true
     config.vm.provision "shell", inline:
       "ps aux | grep 'sshd:' | awk '{print $2}' | xargs kill"
-		docker.vm.provision 'shell',
-			inline: 'yum -y update; yum -y install rsync python ansible'
+    docker.vm.provision 'shell',
+      inline: 'yum -y update; yum -y install rsync python ansible'
     docker.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
     end
