@@ -2,60 +2,34 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/homemaker
+    working_directory: /home/linux-dev-workstation
     docker:
-      - image: jessestuart/vagrant-build-base:latest
+      - image: jessestuart/phusion-baseimage
         user: root
     environment:
       - PACKAGES: "ansible build-essential curl dkms python sudo wget"
-
     steps:
       - checkout
 
-      - run:
-          name: Validate Vagrantfile
-          command: vagrant validate
-
       - setup_remote_docker
 
-      # - run:
-      #     name: Link cache.
-      #     command: |
-      #       set -x
-      #       if [ -z "$CIRCLE_BUILD_NUM" ]; then
-      #         mkdir -p /home/vagrant/cache/vagrant
-      #         ln -sf  /home/vagrant/cache/vagrant \
-      #           /home/vagrant/.vagrant/machines/default/cache
-      #       fi
-
-      # This cache is produced by the vagrant-cachier plugin. It created a
-      # synced folder named /tmp/vagrant-cache that primarily holds OS
-      # packages, but this project also keeps other large downloads there. The
-      # cache key includes the revision because any of the Vagrantfile or
-      # Ansible files can influence the cache.  The second key will reuse the
-      # cache from a previous build.
       - restore_cache:
           keys:
-            - v1-vagrant-{{ .Branch }}-{{ .Revision }}
-            - v1-vagrant-{{ .Branch }}-
-            - v1-vagrant-
+            - v1-dependencies-{{ checksum "Vagrantfile" }}
+      - run:
+          command: |
+            vagrant validate
 
       - run:
           command: |
-            # Install the bare-minimum dependencies to allow us to connect
-            # via Ansible, even in CI.
             apt-get update -y
             apt-get install -y $PACKAGES linux-headers-$(uname -r)
-            ansible-galaxy install -r ansible/requirements.yml
+
 
       # The 'test' here is that Vagrant can build the box. We should add more
       # steps after this to ensure the software we installed is in working
       # order.
       - run:
+          name: Test Vagrant Up
           command: |
             vagrant up default --provision
-
-      - save_cache:
-          key: v1-vagrant-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - "$HOME/.vagrant/machines/default/cache"
