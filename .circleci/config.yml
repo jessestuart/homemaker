@@ -10,10 +10,6 @@ jobs:
       - checkout
 
       - run:
-          name: Validate Vagrantfile
-          command: vagrant validate
-
-      - run:
           name: Link cache.
           command: |
             set -x
@@ -34,6 +30,15 @@ jobs:
             - v1-vagrant-{{ .Branch }}-{{ .Revision }}
             - v1-vagrant-{{ .Branch }}-
             - v1-vagrant-
+
+      - run:
+          command: |
+            chmod a+rx scripts/provisioner.sh
+            ./scripts/provisioner.sh
+
+      - run:
+          name: Validate Vagrantfile
+          command: vagrant validate
 
       - run:
           command: |

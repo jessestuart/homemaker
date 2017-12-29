@@ -6,9 +6,10 @@ Vagrant.configure('2') do |config|
   # ======================================
 
   config.vm.define 'default', autostart: true do |vbox|
-    vbox.vm.provider 'virtualbox' do |v|
+    vbox.vm.provider 'virtualbox' do |v, override|
       v.memory = 2048
-      v.cpus = 2
+			v.cpus = 2
+			override.nfs.functional = false
     end
 
     vbox.vm.box = 'centos/7'
