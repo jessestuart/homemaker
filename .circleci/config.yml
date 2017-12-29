@@ -2,9 +2,9 @@
 version: 2
 jobs:
   build:
-    working_directory: /home/linux-dev-workstation
+    working_directory: ~/homemaker
     docker:
-      - image: jessestuart/phusion-baseimage
+      - image: jessestuart/vagrant-build-base
         user: root
     environment:
       - PACKAGES: "ansible build-essential curl dkms python sudo wget"
