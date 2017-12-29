@@ -1,0 +1,4 @@
+[ver:1,total:240]
+ansible/roles/homemaker/tasks/main.yml:180,1514577600:180,m
+.circleci/config.yml:30,1514577600:30,m
+.circleci/provision.sh:30,1514577600:30,r
