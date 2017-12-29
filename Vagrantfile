@@ -39,44 +39,4 @@ Vagrant.configure('2') do |config|
       ansible.playbook = 'ansible/bootstrap.yml'
     end
   end
-
-  # ====================================
-  # Definitions for the Docker container
-  # ====================================
-
-  config.vm.define 'docker', autostart: false do |docker|
-    docker.vm.provider 'docker' do |d, override|
-      override.vm.box = nil
-      override.vm.allowed_synced_folder_types = :rsync
-      # There is no newline after the existing insecure key, so the new key
-      # ends up on the same line and breaks SSH.
-      override.ssh.insert_key = false
-      override.ssh.proxy_command = "\
-        docker run -i --rm --link homemaker alpine/socat - \
-          TCP:homemaker:22,retry=3,interval=2
-      "
-      d.image = "jdeathe/centos-ssh:centos-7-2.2.3"
-      d.name = "homemaker"
-      d.remains_running = true
-      d.has_ssh = true
-      d.force_host_vm = false
-      d.env = {
-        :SSH_USER => 'vagrant',
-        :SSH_SUDO => 'ALL=(ALL) NOPASSWD:ALL',
-        :LANG     => 'en_US.UTF-8',
-        :LANGUAGE => 'en_US:en',
-        :LC_ALL   => 'en_US.UTF-8',
-        :SSH_INHERIT_ENVIRONMENT => 'true',
-      }
-    end
-    docker.vm.synced_folder ".", "/vagrant", disabled: true
-    config.vm.provision "shell", inline:
-      "ps aux | grep 'sshd:' | awk '{print $2}' | xargs kill"
-    docker.vm.provision 'shell',
-      inline: 'yum -y update; yum -y install rsync python ansible'
-    docker.vm.provision :ansible do |ansible|
-      ansible.playbook = 'ansible/bootstrap.yml'
-    end
-  end
-
 end
