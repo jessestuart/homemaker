@@ -1,0 +1,9 @@
+[ver:1,total:2580]
+.circleci/config.yml:1170,1514541600:510,1514545200:60,1514548800:120,1514552400:480,m
+ansible/roles/base/tasks/main.yml:570,1514545200:30,1514548800:540,m
+ansible/bootstrap.yml:330,1514545200:330,m
+ansible/roles/homemaker/tasks/main.yml:160,1514545200:100,1514548800:60,m
+packer/do.json:150,1514541600:150,r
+Vagrantfile:120,1514545200:120,r
+packer/packer.json:60,1514541600:60,r
+Dockerfile:20,1514545200:20,r
