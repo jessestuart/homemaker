@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: /home/linux-dev-workstation
     docker:
-      - image: jessestuart/vagrant-build-base:latest
+      - image: ubuntu:xenial
         user: root
 
     steps:
@@ -13,7 +13,16 @@ jobs:
 
       - run:
           command: |
-            yum install -y ansible
+            wget -q -O - http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | sudo apt-key add -
+            sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian precise non-free contrib" >> /etc/apt/sources.list.d/virtualbox.org.list'
+            sudo apt-get update -y
+            sudo apt-get install -y linux-headers-$(uname -r) build-essential virtualbox dkms python ansible
+            pushd /tmp
+            wget http://download.virtualbox.org/virtualbox/4.3.36/Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack
+            sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack
+            wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
+            sudo dpkg -i vagrant_2.0.1_x86_64.deb
+            popd
 
       - run:
           command: |
@@ -25,4 +34,4 @@ jobs:
       - run:
           name: Test Vagrant Up
           command: |
-            vagrant up docker --provider docker --provision
+            vagrant up default --provision
