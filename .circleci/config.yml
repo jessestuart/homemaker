@@ -3,45 +3,15 @@ version: 2
 jobs:
   build:
     working_directory: ~/homemaker
+
     machine: true
-
-    steps:
-      - checkout
-
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "Vagrantfile" }}
-            - v1-dependencies-
-
-      - run:
-          command: chmod +x ./provision.sh && sudo ./provision.sh
-
-      - run:
-          command: ansible-galaxy install -r ansible/requirements.yml
-
-      # The 'test' here is that Vagrant can build the box. We should add more
-      # steps after this to ensure the software we installed is in working
-      # order.
-      - run:
-          command: vagrant up default --provision
-
-      ---
-version: 2
-
-jobs:
-  build:
-    working_directory: /home/vagrant
-    docker:
-      - image: jessestuart/vagrant-build-base:latest
-        user: root
 
     steps:
       - checkout
 
       - run:
           name: Validate Vagrantfile
-          command: |
-            vagrant validate
+          command: vagrant validate
 
       - setup_remote_docker
 
