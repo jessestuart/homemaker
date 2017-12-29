@@ -1,0 +1,5 @@
+[ver:1,total:540]
+.circleci/config.yml:240,1514577600:240,m
+Vagrantfile:225,1514577600:225,m
+scripts/provisioner.sh:45,1514577600:45,d
+.circleci/provision.sh:30,1514577600:30,r
