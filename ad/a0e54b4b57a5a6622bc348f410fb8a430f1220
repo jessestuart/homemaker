@@ -1,0 +1,4 @@
+[ver:1,total:120]
+ansible/roles/base/tasks/main.yml:50,1514509200:50,m
+.circleci/config.yml:40,1514509200:40,m
+Vagrantfile:30,1514509200:30,r
