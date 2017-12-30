@@ -49,19 +49,19 @@ Vagrant.configure('2') do |config|
       d.has_ssh = true
       # ------------------------------------------------------------------------
       override.vm.box = nil
-      override.vm.allowed_synced_folder_types = :rsync
-      override.ssh.insert_key = false
-      d.remains_running = true
-      d.force_host_vm = false
+      # override.vm.allowed_synced_folder_types = :rsync
+      # override.ssh.insert_key = true
+      # d.remains_running = true
+      # d.force_host_vm = false
+      # d.env = {
+      #   :SSH_USER => 'vagrant',
+      #   :SSH_SUDO => 'ALL=(ALL) NOPASSWD:ALL',
+      #   :LANG     => 'en_US.UTF-8',
+      #   :LANGUAGE => 'en_US:en',
+      #   :LC_ALL   => 'en_US.UTF-8',
+      #   :SSH_INHERIT_ENVIRONMENT => 'true',
+      # }
     end
-    docker.env = {
-      :SSH_USER => 'vagrant',
-      :SSH_SUDO => 'ALL=(ALL) NOPASSWD:ALL',
-      :LANG     => 'en_US.UTF-8',
-      :LANGUAGE => 'en_US:en',
-      :LC_ALL   => 'en_US.UTF-8',
-      :SSH_INHERIT_ENVIRONMENT => 'true',
-    }
     docker.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
     end
