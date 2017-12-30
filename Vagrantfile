@@ -44,8 +44,7 @@ Vagrant.configure('2') do |config|
   config.vm.define 'docker', autostart: true do |docker|
     docker.vm.synced_folder ".", "/vagrant", disabled: true
     docker.vm.provider 'docker' do |d, override|
-      # d.build_dir = '.'
-      d.image = 'bertvv/ansible-testing:centos_7'
+      d.build_dir = '.'
       d.create_args = ["--privileged", "-v", "/sys/fs/cgroup:/sys/fs/cgroup:ro"]
       d.has_ssh = true
       # ------------------------------------------------------------------------
