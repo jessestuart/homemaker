@@ -41,38 +41,22 @@ Vagrant.configure('2') do |config|
     end
   end
 
-  config.ssh.insert_key = false
-  config.ssh.private_key_path = ["keys/private", "~/.vagrant.d/insecure_private_key"]
-  config.vm.provision "file", source: "keys/public", destination: "~/.ssh/authorized_keys"
-  config.vm.provision "shell", inline: <<-EOC
-    sudo sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
-    sudo service ssh restart
-  EOC
-
   config.vm.define 'docker', autostart: true do |docker|
-		docker.vm.synced_folder ".", "/vagrant", disabled: true
-    docker.vm.provider 'docker' do |d, override|
-      d.build_dir = '.'
-      d.create_args = ["--privileged", "-v", "/sys/fs/cgroup:/sys/fs/cgroup:ro"]
+    system("bash genkeys.sh")
+    docker.vm.provider "docker" do |d|
       d.has_ssh = true
-      # ------------------------------------------------------------------------
-      override.ssh.insert_key = true
-      override.vm.box = nil
-      # override.vm.allowed_synced_folder_types = :rsync
-      # d.remains_running = true
-      # d.force_host_vm = false
-      # d.env = {
-      #   :SSH_USER => 'vagrant',
-      #   :SSH_SUDO => 'ALL=(ALL) NOPASSWD:ALL',
-      #   :LANG     => 'en_US.UTF-8',
-      #   :LANGUAGE => 'en_US:en',
-      #   :LC_ALL   => 'en_US.UTF-8',
-      #   :SSH_INHERIT_ENVIRONMENT => 'true',
-      # }
+      d.build_dir = "."
     end
+
+    docker.ssh.private_key_path = "keys/vagrantssh.key"
+    docker.ssh.username = "vagrant"
+
     docker.vm.provision :ansible do |ansible|
-      ansible.playbook = 'ansible/bootstrap.yml'
+      ansible.playbook = "playbook.yml"
+      ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
+      # ansible.verbose = "vvvv"
     end
+    docker.vm.synced_folder ".", "/vagrant"
   end
 
 end

@@ -3,4 +3,5 @@
 .DS_Store
 .gtm/
 .vagrant
+keys/
 packer_cache/
