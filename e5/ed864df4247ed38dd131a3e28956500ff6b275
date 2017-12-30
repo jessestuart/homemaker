@@ -1,0 +1,10 @@
+[ver:1,total:60]
+.circleci/config.yml:60,1514671200:60,m
+
+[ver:1,total:120]
+.circleci/config.yml:60,1514671200:60,m
+scripts/provision.sh:30,1514671200:30,m
+.circleci/provision.sh:30,1514671200:30,r
+
+[ver:1,total:120]
+.circleci/config.yml:120,1514671200:120,m
