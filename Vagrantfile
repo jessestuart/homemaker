@@ -54,6 +54,14 @@ Vagrant.configure('2') do |config|
       d.remains_running = true
       d.force_host_vm = false
     end
+    docker.env = {
+      :SSH_USER => 'vagrant',
+      :SSH_SUDO => 'ALL=(ALL) NOPASSWD:ALL',
+      :LANG     => 'en_US.UTF-8',
+      :LANGUAGE => 'en_US:en',
+      :LC_ALL   => 'en_US.UTF-8',
+      :SSH_INHERIT_ENVIRONMENT => 'true',
+    }
     docker.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
     end
