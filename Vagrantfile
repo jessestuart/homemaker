@@ -41,6 +41,14 @@ Vagrant.configure('2') do |config|
     end
   end
 
+  config.ssh.insert_key = false
+  config.ssh.private_key_path = ["keys/private", "~/.vagrant.d/insecure_private_key"]
+  config.vm.provision "file", source: "keys/public", destination: "~/.ssh/authorized_keys"
+  config.vm.provision "shell", inline: <<-EOC
+    sudo sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
+    sudo service ssh restart
+  EOC
+
   config.vm.define 'docker', autostart: true do |docker|
 		docker.vm.synced_folder ".", "/vagrant", disabled: true
     docker.vm.provider 'docker' do |d, override|
@@ -48,7 +56,7 @@ Vagrant.configure('2') do |config|
       d.create_args = ["--privileged", "-v", "/sys/fs/cgroup:/sys/fs/cgroup:ro"]
       d.has_ssh = true
       # ------------------------------------------------------------------------
-      override.ssh.insert_key = false
+      override.ssh.insert_key = true
       override.vm.box = nil
       # override.vm.allowed_synced_folder_types = :rsync
       # d.remains_running = true
