@@ -1,0 +1,13 @@
+[ver:1,total:420]
+.circleci/config.yml:240,1514674800:240,m
+.travis.yml:180,1514674800:180,m
+
+[ver:1,total:240]
+.circleci/config.yml:195,1514674800:195,m
+scripts/provision.sh:30,1514674800:30,r
+.circleci/provision.sh:15,1514674800:15,r
+
+[ver:1,total:240]
+scripts/provision.sh:120,1514671200:60,1514674800:60,r
+.circleci/config.yml:100,1514671200:60,1514674800:40,m
+Dockerfile:20,1514674800:20,r
