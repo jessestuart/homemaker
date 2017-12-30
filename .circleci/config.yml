@@ -41,6 +41,13 @@ jobs:
           command: vagrant validate
 
       - run:
+          name: Install vagrant plugins.
+          command: |
+            vagrant plugin install vagrant-hostmanager
+            vagrant plugin install vagrant-share
+            vagrant plugin install vagrant-vbguest
+
+      - run:
           command: |
             vagrant up docker --provision
 

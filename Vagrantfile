@@ -42,15 +42,15 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.define 'docker', autostart: true do |docker|
-    docker.vm.synced_folder ".", "/vagrant", disabled: true
+		docker.vm.synced_folder ".", "/vagrant", disabled: true
     docker.vm.provider 'docker' do |d, override|
       d.build_dir = '.'
       d.create_args = ["--privileged", "-v", "/sys/fs/cgroup:/sys/fs/cgroup:ro"]
       d.has_ssh = true
       # ------------------------------------------------------------------------
+      override.ssh.insert_key = false
       override.vm.box = nil
       # override.vm.allowed_synced_folder_types = :rsync
-      # override.ssh.insert_key = true
       # d.remains_running = true
       # d.force_host_vm = false
       # d.env = {
