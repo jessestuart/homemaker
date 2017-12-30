@@ -1,6 +1,6 @@
 # vi: set ft=ruby :
 Vagrant.configure('2') do |config|
-
+  ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
   # ======================================
   # Definitions for the VirtualBox machine
   # ======================================
@@ -8,8 +8,8 @@ Vagrant.configure('2') do |config|
   config.vm.define 'default', autostart: true do |vbox|
     vbox.vm.provider 'virtualbox' do |v, override|
       v.memory = 2048
-			v.cpus = 2
-			override.nfs.functional = false
+      v.cpus = 2
+      override.nfs.functional = false
     end
 
     vbox.vm.box = 'centos/7'
@@ -40,4 +40,22 @@ Vagrant.configure('2') do |config|
       ansible.playbook = 'ansible/bootstrap.yml'
     end
   end
+
+  config.vm.define 'docker', autostart: true do |docker|
+    docker.vm.synced_folder ".", "/vagrant", disabled: true
+    docker.vm.provider 'docker' do |d, override|
+      d.build_dir = '.'
+      d.create_args = ["--privileged", "-v", "/sys/fs/cgroup:/sys/fs/cgroup:ro"]
+      d.has_ssh = true
+      # ------------------------------------------------------------------------
+      override.vm.box = nil
+      override.vm.allowed_synced_folder_types = :rsync
+      d.remains_running = true
+      d.force_host_vm = false
+    end
+    docker.vm.provision :ansible do |ansible|
+      ansible.playbook = 'ansible/bootstrap.yml'
+    end
+  end
+
 end
