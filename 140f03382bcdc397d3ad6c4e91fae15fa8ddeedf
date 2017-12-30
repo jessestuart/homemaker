@@ -1,0 +1,4 @@
+[ver:1,total:120]
+.circleci/config.yml:80,1514667600:80,m
+Vagrantfile:20,1514667600:20,m
+Dockerfile:20,1514667600:20,r
