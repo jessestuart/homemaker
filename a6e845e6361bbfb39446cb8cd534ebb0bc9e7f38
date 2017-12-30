@@ -1,0 +1,4 @@
+[ver:1,total:240]
+scripts/provision.sh:120,1514671200:60,1514674800:60,r
+.circleci/config.yml:100,1514671200:60,1514674800:40,m
+Dockerfile:20,1514674800:20,r
