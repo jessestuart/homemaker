@@ -2,17 +2,12 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/homemaker
+    working_directory: ~/vagrant
 
     machine: true
 
     steps:
       - checkout
-			- setup_remote_docker
-
-      - run:
-          name: Validate Vagrantfile
-          command: vagrant validate
 
       - run:
           name: Link cache.
@@ -38,7 +33,16 @@ jobs:
 
       - run:
           command: |
-            vagrant up docker
+            chmod a+rx ./scripts/provision.sh
+            sudo ./scripts/provision.sh
+
+      - run:
+          name: Validate Vagrantfile
+          command: vagrant validate
+
+      - run:
+          command: |
+            vagrant up docker --provision
 
 #       - save_cache:
 #           keys:
