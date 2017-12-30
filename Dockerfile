@@ -34,4 +34,4 @@ RUN \
 	echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts; \
 	systemctl enable sshd.service;
 
-CMD ["/usr/sbin/init"]
+CMD ["/usr/sbin/init", "--enable-insecure-key"]

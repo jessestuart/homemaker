@@ -10,14 +10,14 @@ jobs:
 
       - setup_remote_docker
 
-      - run:
-          name: Link Developer Workstation Cache
-          command: |
-            set -x
-            if [ -z "$CIRCLE_BUILD_NUM" ]; then
-              mkdir -p /home/vagrant/cache/vagrant
-              ln -sf  /home/vagrant/cache/vagrant /home/vagrant/.vagrant/machines/default/cache
-            fi
+      # - run:
+      #     name: Link Developer Workstation Cache
+      #     command: |
+      #       set -x
+      #       if [ -z "$CIRCLE_BUILD_NUM" ]; then
+      #         mkdir -p /home/vagrant/cache/vagrant
+      #         ln -sf  /home/vagrant/cache/vagrant /home/vagrant/.vagrant/machines/default/cache
+      #       fi
 
       # This cache is for the docker images. Layer caching is early, we use a
       # tarball created by `docker save` to cache our images.
@@ -39,13 +39,13 @@ jobs:
             - v1-vagrant-{{ .Branch }}-
             - v1-vagrant-
 
-      - run:
-          name: Restore Docker Public Image Cache
-          command: |
-            set -x
-            if [[ -e /home/vagrant/cache/docker/image.tar ]]; then
-              docker load -i /home/vagrant/cache/docker/image.tar
-            fi
+      # - run:
+      #     name: Restore Docker Public Image Cache
+      #     command: |
+      #       set -x
+      #       if [[ -e /home/vagrant/cache/docker/image.tar ]]; then
+      #         docker load -i /home/vagrant/cache/docker/image.tar
+      #       fi
 
       # The 'test' here is that Vagrant can build the box. We should add more
       # steps after this to ensure the software we installed is in working
