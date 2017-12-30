@@ -52,7 +52,7 @@ Vagrant.configure('2') do |config|
     docker.ssh.username = "vagrant"
 
     docker.vm.provision :ansible do |ansible|
-      ansible.playbook = "playbook.yml"
+      ansible.playbook = "ansible/bootstrap.yml"
       ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
       # ansible.verbose = "vvvv"
     end
