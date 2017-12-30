@@ -1,0 +1,15 @@
+[ver:1,total:420]
+.circleci/config.yml:380,1514667600:380,m
+Dockerfile:20,1514667600:20,m
+Vagrantfile:20,1514667600:20,r
+
+[ver:1,total:300]
+ansible/roles/opsec/tasks/main.yml:150,1514667600:150,r
+.circleci/config.yml:90,1514667600:90,m
+ansible/host_vars/main.yml:30,1514667600:30,r
+ansible/bootstrap.yml:30,1514667600:30,r
+
+[ver:1,total:300]
+Dockerfile:180,1514667600:180,m
+.circleci/config.yml:90,1514667600:90,r
+Vagrantfile:30,1514667600:30,r
