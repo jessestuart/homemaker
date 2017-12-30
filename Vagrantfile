@@ -1,6 +1,6 @@
 # vi: set ft=ruby :
 Vagrant.configure('2') do |config|
-  ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
+
   # ======================================
   # Definitions for the VirtualBox machine
   # ======================================
@@ -50,6 +50,7 @@ Vagrant.configure('2') do |config|
       # ------------------------------------------------------------------------
       override.vm.box = nil
       override.vm.allowed_synced_folder_types = :rsync
+      override.ssh.insert_key = false
       d.remains_running = true
       d.force_host_vm = false
     end
