@@ -2,3 +2,7 @@
 .circleci/config.yml:180,1514689200:180,m
 ansible/roles/opsec/tasks/main.yml:60,1514689200:60,r
 ansible/roles/homemaker/tasks/main.yml:60,1514689200:60,r
+
+[ver:1,total:1560]
+.circleci/config.yml:1500,1514685600:180,1514689200:1320,m
+ansible/roles/opsec/tasks/main.yml:60,1514689200:60,r
