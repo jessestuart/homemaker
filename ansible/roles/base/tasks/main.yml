@@ -8,11 +8,6 @@
     name: https://centos7.iuscommunity.org/ius-release.rpm
     state: present
 
-- name: Ensure python 2.7 is installed.
-  raw: |
-    test -e /usr/bin/python || (yum -y update; yum -y install python)
-    creates=/usr/bin/python
-
 - name: Ensure pip is installed.
   include_role:
     name: geerlingguy.pip

@@ -25,6 +25,7 @@
   roles:
     - opsec
 
+# TODO Get this working again.
 # - name: Set up NTP.
 #   gather_facts: yes
 #   become: yes
@@ -51,6 +52,7 @@
     - docker
   roles:
     - geerlingguy.docker
+  # Ignore errors, because the service module fails in CI.
   ignore_errors: yes
 
 - name: Ensure tmux is installed.
@@ -112,5 +114,3 @@
   tasks:
     - name: Remove `/vagrant` folder.
       file: path=/vagrant state=absent
-    - name: Remove unused packages.
-      command: yum clean all
