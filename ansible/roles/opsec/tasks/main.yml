@@ -21,8 +21,33 @@
     state: present
     line: 'AcceptEnv AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION #AWS Creds'
     regexp: '#AWS Creds'
+  when: ansible_virtualization_type != 'docker'
   notify:
     - Restart ssh service
+
+- name: Install docker-py.
+  become: yes
+  pip: name=docker-py state=latest
+  tags: hostname
+
+# Set the hostname as specified in the inventory.
+- name: Set /etc/hostname
+  gather_facts: yes
+  become: yes
+  tags: hostname
+  hostname: name="{{ hostname }}"
+  when: ansible_virtualization_type != 'docker'
+
+# This is required to be in sync because many commands, such as sudo,
+# may fail otherwise.
+- name: Register hostname in /etc/hosts
+  tags: hostname
+  when: ansible_virtualization_type != 'docker'
+  lineinfile:
+    state: present
+    dest: /etc/hosts
+    regexp: '127.0.0.1'
+    line: "127.0.0.1 localhost {{ hostname }}"
 
 # - name: Remove root public keys
 #   file:

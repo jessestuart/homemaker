@@ -1,0 +1,82 @@
+---
+version: 2
+
+jobs:
+  build:
+    working_directory: /home/vagrant
+    docker:
+      - image: jessestuart/vagrant-build-base:latest
+    environment:
+      # yamllint disable-line
+      - IMAGE_ID: "672278003389.dkr.ecr.us-east-1.amazonaws.com/jessestuart/homemaker"
+      # yamllint disable-line
+      - AWS_AUTH_COMMAND: "aws ecr get-login --no-include-email --region us-east-1"
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: Authenticate with Amazon ECR.
+          command: |
+            eval $(${AWS_AUTH_COMMAND})
+
+      # This cache is for the docker images. Layer caching is early, so we use
+      # a tarball created by `docker save` to cache our images.
+      - restore_cache:
+          keys:
+            - v1-dockerimage-{{ .Branch }}-{{ .Revision }}
+            - v1-dockerimage-{{ .Branch }}-
+            - v1-dockerimage-
+
+      - run:
+          name: |
+            Load public image cache into Docker host.
+          command: |
+            set -x
+            if [[ -e /home/vagrant/cache/docker/image.tar ]]; then
+              docker load -i /home/vagrant/cache/docker/image.tar
+            fi
+
+      - run:
+          name: Install vagrant plugins.
+          command: |
+            vagrant plugin install vagrant-hostmanager
+            vagrant plugin install vagrant-cachier
+
+      - run:
+          name: Install ansible-galaxy roles.
+          command: ansible-galaxy install -r ansible/requirements.yml
+
+      - run:
+          name: Build Vagrant box and test Ansible Playbook.
+          command: |
+            eval $(ssh-agent)
+            vagrant up docker --provision
+
+      - run:
+          name: Build Docker public image cache as a tarball.
+          command: |
+            mkdir -p /home/vagrant/cache/docker
+            IMGS=$(docker images | grep -v 'REPOSITORY\|none' | cut -d ' ' -f 1)
+            docker save $IMGS > /home/vagrant/cache/docker/image.tar
+
+      - save_cache:
+          key: v1-dockerimage-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - /home/vagrant/cache/docker
+
+      - run:
+          name: Commit the running container to a Docker image.
+          command: |
+            docker commit $(docker ps -l -q) "${IMAGE_ID}"
+
+      - run:
+          name: Push Docker image to ECR.
+          command: |
+            docker tag    "${IMAGE_ID}" "${IMAGE_ID}:circle-${CIRCLE_BUILD_NUM}"
+            docker push                 "${IMAGE_ID}:circle-${CIRCLE_BUILD_NUM}"
+            if [ "${CIRCLE_BRANCH}" = 'master' ]; then
+              docker tag  "${IMAGE_ID}" "${IMAGE_ID}:latest"
+              docker push               "${IMAGE_ID}:latest"
+            fi
