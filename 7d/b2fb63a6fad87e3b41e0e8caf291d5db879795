@@ -1,0 +1,7 @@
+[ver:1,total:0]
+
+[ver:1,total:420]
+Dockerfile:360,1514682000:360,m
+Vagrantfile:20,1514682000:20,r
+ansible/roles/homemaker/tasks/main.yml:20,1514682000:20,r
+ansible/roles/base/tasks/main.yml:20,1514682000:20,r
