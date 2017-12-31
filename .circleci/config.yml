@@ -23,7 +23,7 @@ jobs:
       # tarball created by `docker save` to cache our images.
       - restore_cache:
           keys:
-            - v1-dockerimage-{{ .Branch }}-{{ checksum "Vagrantfile" }}}
+            - v1-dockerimage-{{ .Branch }}-{{ .Revision }}
             - v1-dockerimage-{{ .Branch }}-
             - v1-dockerimage-
 
@@ -48,6 +48,12 @@ jobs:
             fi
 
       - run:
+          name: Install vagrant plugins.
+          command: |
+            vagrant plugin install vagrant-hostmanager
+            vagrant plugin install vagrant-cachier
+
+      - run:
           command: ansible-galaxy install -r ansible/requirements.yml
 
       - run:
@@ -63,14 +69,13 @@ jobs:
             eval $(ssh-agent)
             vagrant up docker --provision
 
-      # - run:
-      #     name: Build Docker Public Image Cache
-      #     command: |
-      #       set -x
-      #       mkdir -p /home/vagrant/cache/docker
-      #       docker save \
-      #         $(docker images | grep -v 'REPOSITORY\|none' | cut -d ' ' -f 1) \
-      #         > /home/vagrant/cache/docker/image.tar
+      - run:
+          name: Build Docker Public Image Cache
+          command: |
+            mkdir -p /home/vagrant/cache/docker
+            docker save \
+              $(docker images | grep -v 'REPOSITORY\|none' | cut -d ' ' -f 1) > \
+              /home/vagrant/cache/docker/image.tar
 
       - save_cache:
           key: v1-dockerimage-{{ .Branch }}-{{ checksum "Vagrantfile" }}
@@ -83,10 +88,9 @@ jobs:
       # - run:
       #     name: Copy Vagrant Cache
       #     command: |
-      #       set -x
       #       rm -rf /home/vagrant/.vagrant/machines/default/cache
       #       # yamllint ignore-line
-      #       docker cp vagrant:/tmp/vagrant-cache /home/vagrant/.vagrant/machines/default/cache
+      #       docker cp $(docker ps -l -q):/tmp/vagrant-cache /home/vagrant/.vagrant/machines/default/cache
 
       - save_cache:
           key: v1-vagrant-{{ .Branch }}-{{ .Revision }}
