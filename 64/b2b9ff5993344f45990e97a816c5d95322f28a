@@ -1,0 +1,15 @@
+[ver:1,total:120]
+.circleci/config.yml:60,1514682000:60,m
+Vagrantfile:30,1514682000:30,m
+.travis.yml:15,1514682000:15,r
+Dockerfile:15,1514682000:15,r
+
+[ver:1,total:60]
+.circleci/config.yml:30,1514682000:30,m
+.travis.yml:30,1514682000:30,r
+
+[ver:1,total:180]
+.travis.yml:80,1514678400:60,1514682000:20,r
+.circleci/config.yml:60,1514682000:60,m
+Vagrantfile:20,1514682000:20,m
+Dockerfile:20,1514682000:20,r
