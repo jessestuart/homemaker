@@ -1,0 +1,4 @@
+[ver:1,total:600]
+.circleci/config.yml:360,1514689200:360,m
+ansible/bootstrap.yml:120,1514689200:120,m
+ansible/roles/base/tasks/main.yml:120,1514689200:120,m
