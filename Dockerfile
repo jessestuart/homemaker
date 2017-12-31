@@ -26,22 +26,15 @@ RUN yum -y -q install epel-release
 RUN yum -y -q install git ansible sudo python openssh-server openssh-clients hostname
 
 RUN \
-  cat /tmp/${SSHKEYFILE}.pub >> /root/.ssh/authorized_keys; \
-  useradd \
-    --shell /bin/bash \
-    --create-home \
-    --base-dir /home \
-    --user-group \
-    --groups sudo,ssh \
-    --password '' \
-    vagrant; \
-  # Install the public key for vagrant user
-  mkdir -p /home/vagrant/.ssh && \
-  cat /tmp/${SSHKEYFILE}.pub >> /home/vagrant/.ssh/authorized_keys && \
-  chown -R vagrant:vagrant /home/vagrant/.ssh && \
-  # Remove the temporary location for the key
-  rm -f /tmp/${SSHKEYFILE}.pub && \
-	useradd --create-home -s /bin/bash vagrant; \
+	mkdir -p /root/.ssh; \
+	cat /tmp/${SSHKEYFILE}.pub >> /root/.ssh/authorized_keys; \
+	useradd --shell /bin/bash --create-home --base-dir /home --user-group --password '' vagrant; \
+	# Install the public key for vagrant user
+	mkdir -p /home/vagrant/.ssh && \
+	cat /tmp/${SSHKEYFILE}.pub >> /home/vagrant/.ssh/authorized_keys && \
+	chown -R vagrant:vagrant /home/vagrant/.ssh && \
+	rm -f /tmp/${SSHKEYFILE}.pub && \
+	# useradd --create-home -s /bin/bash vagrant; \
 	echo -n 'vagrant:vagrant' | chpasswd; \
 	echo 'vagrant ALL = NOPASSWD: ALL' > /etc/sudoers.d/vagrant; \
 	chmod 440 /etc/sudoers.d/vagrant; \
@@ -87,4 +80,3 @@ CMD ["/usr/sbin/init"]
 #   chmod u+w ${SUDOFILE} && \
 #   echo '%sudo   ALL=(ALL:ALL) NOPASSWD: ALL' >> ${SUDOFILE} && \
 #   chmod u-w ${SUDOFILE}
-

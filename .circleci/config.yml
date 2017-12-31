@@ -54,6 +54,7 @@ jobs:
       - run:
           name: Test Vagrant Up
           command: |
+            mkdir -p keys
             vagrant up docker --provision
 
       # - run:
