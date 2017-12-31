@@ -1,9 +1,14 @@
+---
 version: 2
+
 jobs:
   build:
     working_directory: /home/vagrant
     docker:
       - image: jessestuart/vagrant-build-base:latest
+    environment:
+      # yamllint disable-line
+      - IMAGE_ID: "672278003389.dkr.ecr.us-east-1.amazonaws.com/jessestuart/homemaker"
 
     steps:
       - checkout
@@ -16,28 +21,17 @@ jobs:
             set -x
             if [ -z "$CIRCLE_BUILD_NUM" ]; then
               mkdir -p /home/vagrant/cache/vagrant
-              ln -sf  /home/vagrant/cache/vagrant /home/vagrant/.vagrant/machines/default/cache
+              ln -sf  /home/vagrant/cache/vagrant \
+                /home/vagrant/.vagrant/machines/default/cache
             fi
 
-      # This cache is for the docker images. Layer caching is early, we use a
-      # tarball created by `docker save` to cache our images.
+      # This cache is for the docker images. Layer caching is early, so we use
+      # a tarball created by `docker save` to cache our images.
       - restore_cache:
           keys:
             - v1-dockerimage-{{ .Branch }}-{{ .Revision }}
             - v1-dockerimage-{{ .Branch }}-
             - v1-dockerimage-
-
-      # This cache is produced by the vagrant-cachier plugin. It created a
-      # synced folder named /tmp/vagrant-cache that primarily holds OS
-      # packages, but this project also keeps other large downloads there.  The
-      # cache key includes the revision because any of the Vagrantfile or
-      # Puppet files can influence the cache.  The second key will reuse the
-      # cache from a previous build.
-      - restore_cache:
-          keys:
-            - v1-vagrant-{{ .Branch }}-{{ .Revision }}
-            - v1-vagrant-{{ .Branch }}-
-            - v1-vagrant-
 
       - run:
           name: Restore Docker Public Image Cache
@@ -64,7 +58,7 @@ jobs:
       # order.
       # We are adding '--provision' for testing locally and iterating.
       - run:
-          name: Test Vagrant Up
+          name: Build Vagrant box and test Ansible Playbook.
           command: |
             eval $(ssh-agent)
             vagrant up docker --provision
@@ -73,26 +67,21 @@ jobs:
           name: Build Docker Public Image Cache
           command: |
             mkdir -p /home/vagrant/cache/docker
-            docker save \
-              $(docker images | grep -v 'REPOSITORY\|none' | cut -d ' ' -f 1) > \
-              /home/vagrant/cache/docker/image.tar
+            IMGS=$(docker images | grep -v 'REPOSITORY\|none' | cut -d ' ' -f 1)
+            docker save $IMGS > /home/vagrant/cache/docker/image.tar
 
       - save_cache:
           key: v1-dockerimage-{{ .Branch }}-{{ checksum "Vagrantfile" }}
           paths:
             - /home/vagrant/cache/docker
 
-      # # We must use rsync for synced folder because circleci remote docker
-      # # cannot do volume mapping. We need to copy the cached files back into
-      # # this container for storing in the cache.
-      # - run:
-      #     name: Copy Vagrant Cache
-      #     command: |
-      #       rm -rf /home/vagrant/.vagrant/machines/default/cache
-      #       # yamllint ignore-line
-      #       docker cp $(docker ps -l -q):/tmp/vagrant-cache /home/vagrant/.vagrant/machines/default/cache
+      - run:
+          name: Commit Vagrant box to a Docker image.
+          command: |
+            docker commit $(docker ps -l -q) jessestuart/homemaker
 
-      - save_cache:
-          key: v1-vagrant-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - /home/vagrant/.vagrant/machines/default/cache
+      - run:
+          name: Push Docker image to ECR.
+          command: |
+            eval $(aws ecr get-login --no-include-email --region us-east-1)
+            docker push jessestuart/homemaker

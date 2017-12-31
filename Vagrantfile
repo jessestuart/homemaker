@@ -1,9 +1,9 @@
 # vi: set ft=ruby :
 Vagrant.configure('2') do |config|
 
-  # ======================================
-  # Definitions for the VirtualBox machine
-  # ======================================
+  # =======================================
+  # Definitions for the VirtualBox machine.
+  # =======================================
 
   config.vm.define 'default', autostart: true do |vbox|
     vbox.vm.provider 'virtualbox' do |v, override|
@@ -41,13 +41,16 @@ Vagrant.configure('2') do |config|
     end
   end
 
+  # ======================================
+  # Definitions for the Docker machine.
+  # ======================================
+
   config.vm.define 'docker', autostart: true do |d|
     d.vm.provider :docker do |docker, override|
       override.vm.box = nil
       override.vm.allowed_synced_folder_types = :rsync if ENV.has_key?('CIRCLECI')
-      # docker.image = ""
-      docker.build_dir = "."
-      docker.name = "linux-dev-workstation"
+      docker.image = "jdeathe/centos-ssh:centos-7-2.3.0"
+      docker.name = "homemaker"
       docker.remains_running = true
       docker.has_ssh = true
       docker.env = {
@@ -58,12 +61,14 @@ Vagrant.configure('2') do |config|
         :LC_ALL   => 'en_US.UTF-8',
         :SSH_INHERIT_ENVIRONMENT => 'true',
       }
-      override.ssh.proxy_command = "docker run -i --rm --link linux-dev-workstation alpine/socat - TCP:linux-dev-workstation:22,retry=3,interval=2"
+      override.ssh.proxy_command = "\
+        docker run -i --rm --link homemaker alpine/socat - \
+          TCP:homemaker:22,retry=3,interval=2 \
+      "
     end
     d.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
     end
   end
-
 
 end
