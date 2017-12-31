@@ -1,2 +1,9 @@
 [ver:1,total:60]
 .git/rebase-merge/git-rebase-todo:60,1514700000:60,r
+
+[ver:1,total:0]
+
+[ver:1,total:600]
+.circleci/config.yml:360,1514689200:360,m
+ansible/bootstrap.yml:120,1514689200:120,m
+ansible/roles/base/tasks/main.yml:120,1514689200:120,m
