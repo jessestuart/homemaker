@@ -1,0 +1,5 @@
+[ver:1,total:420]
+Vagrantfile:255,1514682000:255,m
+Dockerfile:105,1514682000:105,m
+.circleci/config.yml:40,1514682000:40,r
+.travis.yml:20,1514682000:20,r
