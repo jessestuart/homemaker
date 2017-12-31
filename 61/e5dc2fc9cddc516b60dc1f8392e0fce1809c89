@@ -1,0 +1,5 @@
+[ver:1,total:900]
+Dockerfile:730,1514678400:730,r
+Vagrantfile:90,1514678400:90,m
+.circleci/config.yml:60,1514678400:60,r
+.gitignore:20,1514678400:20,r
