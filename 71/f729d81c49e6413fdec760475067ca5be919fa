@@ -1,2 +1,8 @@
 [ver:1,total:120]
 Vagrantfile:120,1514689200:120,m
+
+[ver:1,total:180]
+Vagrantfile:135,1514689200:135,m
+.circleci/config.yml:15,1514689200:15,r
+ansible/roles/homemaker/tasks/main.yml:15,1514689200:15,r
+.dockerignore:15,1514689200:15,r
