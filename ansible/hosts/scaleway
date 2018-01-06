@@ -1,0 +1,3 @@
+scaleway ansible_ssh_host=212.47.251.14
+# scaleway ansible_ssh_host=163.172.153.102 ansible_user=jesse ansible_private_key_file=~/.ssh/github_rsa
+# scaleway ansible_ssh_host=163.172.153.102 ansible_user=root

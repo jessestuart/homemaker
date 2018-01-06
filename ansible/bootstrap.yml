@@ -1,5 +1,5 @@
 ---
-- name: Install base dependencies and set hostname.
+- name: Install base dependencies.
   become: yes
   gather_facts: yes
   hosts: all
@@ -9,16 +9,10 @@
   roles:
     - base
 
-- name: Create SSH users.
-  become: yes
-  hosts: all
-  tags: ssh
-  roles:
-    - ssh-users
-
 - name: Remove root access & harden box security.
   become: yes
   hosts: all
+  gather_facts: yes
   tags: opsec
   vars_files:
     - host_vars/main.yml
@@ -38,11 +32,8 @@
   become: yes
   hosts: all
   tags: pip
-  tasks:
-    - name: Install pip.
-      include_role: name=geerlingguy.pip
-    - name: Also ensure pip is up-to-date.
-      pip: name=pip state=latest
+  roles:
+    - geerlingguy.pip
 
 - name: Ensure Docker is installed.
   become: yes
@@ -58,8 +49,9 @@
 - name: Ensure tmux is installed.
   hosts: all
   become: yes
+  gather_facts: yes
   vars_files:
-    - 'host_vars/main.yml'
+    - host_vars/main.yml
   tags:
     - dependencies
     - tmux
@@ -93,7 +85,7 @@
   gather_facts: yes
   hosts: all
   vars_files:
-    - 'host_vars/main.yml'
+    - host_vars/main.yml
   tags: homemaker
   roles:
     - homemaker
@@ -102,14 +94,13 @@
   hosts: all
   become: yes
   vars_files:
-    - 'host_vars/main.yml'
+    - host_vars/main.yml
   tags: dotfiles
   roles:
     - dotfiles
 
 - name: Cleanup the cruft.
   become: yes
-  gather_facts: yes
   hosts: all
   tasks:
     - name: Remove `/vagrant` folder.

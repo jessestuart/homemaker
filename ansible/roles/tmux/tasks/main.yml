@@ -6,7 +6,7 @@
 
 - name: End play if tmux is already up-to-date.
   meta: end_play
-  when: tmux_version == '2.6'
+  when: tmux_version is defined and tmux_version == '2.6'
 
 - name: Ensure tmux dependencies are installed.
   become: yes

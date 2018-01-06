@@ -1,4 +1,9 @@
 ---
+- name: Ensure all existing packages are up-to-date.
+  yum:
+    name: '*'
+    state: latest
+
 - name: Ensure CentOS EPEL repos are available.
   include_role:
     name: geerlingguy.repo-epel
@@ -9,8 +14,10 @@
     state: present
 
 - name: Ensure pip is installed.
-  include_role:
-    name: geerlingguy.pip
+  include_role: name=geerlingguy.pip
+
+- name: Ensure pip is up-to-date.
+  command: pip install --upgrade pip
 
 - name: Ensure required packages are installed.
   when: ansible_distribution == 'CentOS'
@@ -29,9 +36,3 @@
     - vim
     - python-virtualenv
     - wget
-
-- name: Install packages from pip.
-  pip: "name={{ item }}"
-  with_items:
-    - awscli
-    - boto

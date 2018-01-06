@@ -1,0 +1,29 @@
+---
+- name: Create SSH users.
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tags: users
+  roles:
+    - ssh-users
+
+- name: Ensure at least one user has been created.
+  hosts: all
+  become: yes
+  tasks:
+    - shell: ls /home | wc -l | tr -d ' '
+      register: home_dirs
+
+# - name: Lock down SSH access.
+#   hosts: all
+#   become: yes
+#   vars:
+#     ssh_allow_agent_forwarding: true
+#     sftp_enabled: true
+#     ssh_use_pam: true
+#   roles:
+#     - name: dev-sec.ssh-hardening
+#       when: home_dirs.stdout | int > 0
+#   tags:
+#     - ssh
+#     - opsec
