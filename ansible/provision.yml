@@ -1,0 +1,71 @@
+---
+- name: Ensure python is installed -- required for Ansible module execution.
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Install python.
+      raw: |
+        test -e "$(which python)" ||
+        (yum update -y && yum install -y python)
+      when: ansible_distribution == 'CentOS'
+      changed_when: no
+    - name: Install python.
+      raw: |
+        test -e "$(which python)" ||
+        (apt update -y && apt install -y python)
+      when: ansible_distribution == 'Debian'
+      changed_when: no
+
+- name: Create SSH users.
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tags: users
+  roles:
+    - ssh-users
+
+- name: Install EPEL if RHEL-based. (required to install opsec packages)
+  hosts: all
+  become: yes
+  tags:
+    - opsec
+    - epel
+    - centos
+  roles:
+    - name: geerlingguy.repo-epel
+      when: ansible_distribution == 'CentOS'
+
+- name: Ensure at least one user has been created.
+  hosts: all
+  tasks:
+    - name: Register the number of users created by listing `/home`.
+      shell: ls /home | wc -l | tr -d ' '
+      register: home_dirs
+      changed_when: no
+
+- name: Remove root access & harden box security.
+  become: yes
+  hosts: all
+  gather_facts: yes
+  tags: opsec
+  vars_files:
+    - host_vars/main.yml
+  roles:
+    - name: opsec
+      when: home_dirs.stdout | int > 0
+
+# TODO
+# - name: Lock down SSH access.
+#   hosts: all
+#   become: yes
+#   vars:
+#     ssh_allow_agent_forwarding: true
+#     sftp_enabled: true
+#     ssh_use_pam: true
+#   roles:
+#     - name: dev-sec.ssh-hardening
+#       when: home_dirs.stdout | int > 0
+#   tags:
+#     - ssh
+#     - opsec

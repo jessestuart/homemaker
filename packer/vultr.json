@@ -17,11 +17,11 @@
   "provisioners": [
     {
       "type": "shell",
-      "script": "scripts/install_ansible.sh"
-    },
-    {
-      "type": "shell",
-      "inline": ["sleep 30", "sudo yum -y update", "sudo yum install -y python"]
+      "inline": [
+        "sleep 30",
+        "sudo yum -y update",
+        "sudo yum install -y python ansible"
+      ]
     },
     {
       "type": "ansible-local",
@@ -41,7 +41,7 @@
         "./ansible/roles/tmux",
         "./ansible/roles/zsh"
       ],
-      "playbook_file": "./ansible/bootstrap.yml"
+      "playbook_file": "./ansible/provision.yml"
     }
   ]
 }

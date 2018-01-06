@@ -1,0 +1,9 @@
+---
+- name: Install Docker & related dependencies.
+  become: yes
+  pacman: name="{{ item }}" state=latest
+  with_items:
+    - docker
+    - docker-compose
+    - docker-machine
+    # - python-docker-py

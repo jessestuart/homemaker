@@ -42,11 +42,11 @@ jobs:
           name: Install vagrant plugins.
           command: |
             vagrant plugin install vagrant-hostmanager
-            vagrant plugin install vagrant-cachier
 
       - run:
           name: Install ansible-galaxy roles.
-          command: ansible-galaxy install -r ansible/requirements.yml
+          command: |
+            ansible-galaxy install -r ansible/requirements.yml
 
       - run:
           name: Build Vagrant box and test Ansible Playbook.

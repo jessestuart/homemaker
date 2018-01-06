@@ -1,0 +1,9 @@
+- name: Install pip.
+  gather_facts: yes
+  include_tasks: "os/{{ ansible_os_family }}.yml"
+
+- name: Ensure pip is up-to-date.
+  pip:
+    name: pip
+    state: latest
+

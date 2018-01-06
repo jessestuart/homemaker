@@ -54,9 +54,9 @@ If all you need is a isolated, disposable development environment, then using
 the provided Vagrantfile to run `homemaker` as a local VM is a great place to
 start.
 
-* =============================================================
-* TODO: Add Makefile to install necessary vagrant plugins, etc.
-* =============================================================
+<!-- * ============================================================= -->
+<!-- * TODO: Add Makefile to install necessary vagrant plugins, etc. -->
+<!-- * ============================================================= -->
 
 ```sh
 git clone https://github.com/jessestuart/homemaker
@@ -89,9 +89,9 @@ supported are:
 
 Support for other services, including Linode and GCE, is on the roadmap.
 
-* ==============================================================
-* TODO: Add instructions for building and running Packer images.
-* ==============================================================
+<!-- * ============================================================== -->
+<!-- * TODO: Add instructions for building and running Packer images. -->
+<!-- * ============================================================== -->
 
 ### Disclaimer
 
