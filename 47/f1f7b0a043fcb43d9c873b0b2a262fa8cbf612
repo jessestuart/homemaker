@@ -1,0 +1,11 @@
+[ver:1,total:4980]
+ansible/roles/opsec/tasks/main.yml:1380,1515290400:240,1515297600:1140,m
+ansible/ansible.cfg:920,1515290400:180,1515294000:710,1515297600:30,m
+ansible/bootstrap.yml:910,1515279600:300,1515294000:330,1515297600:280,m
+ansible/hosts/scaleway:600,1515290400:180,1515294000:420,m
+ansible/roles/base/tasks/main.yml:420,1515294000:420,m
+ansible/roles/zsh/tasks/main.yml:360,1515297600:360,m
+ansible/roles/opsec/handlers/main.yml:180,1515297600:180,m
+ansible/roles/tmux/tasks/main.yml:140,1515297600:140,m
+ansible/provision.yml:40,1515294000:40,m
+ansible/host_vars/main.yml:30,1515297600:30,m
