@@ -6,3 +6,10 @@ ansible/roles/dotfiles/tasks/main.yml:30,1515308400:30,m
 ansible/requirements.yml:30,1515308400:30,m
 ansible/host_vars/main.yml:30,1515308400:30,r
 README.md:30,1515308400:30,r
+
+[ver:1,total:1500]
+ansible/provision.yml:990,1515301200:270,1515304800:720,m
+ansible/hosts/scaleway:210,1515297600:180,1515301200:30,r
+ansible/ansible.cfg:210,1515301200:210,r
+Vagrantfile:60,1515304800:60,m
+ansible/bootstrap.yml:30,1515301200:30,m
