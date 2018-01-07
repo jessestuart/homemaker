@@ -9,16 +9,6 @@
   roles:
     - base
 
-- name: Remove root access & harden box security.
-  become: yes
-  hosts: all
-  gather_facts: yes
-  tags: opsec
-  vars_files:
-    - host_vars/main.yml
-  roles:
-    - opsec
-
 # TODO Get this working again.
 # - name: Set up NTP.
 #   gather_facts: yes

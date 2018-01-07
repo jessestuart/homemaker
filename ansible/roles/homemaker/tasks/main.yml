@@ -32,18 +32,11 @@
     - neovim
     - nodejs
     - ripgrep
-    - rsync
     - yarn
 
 - name: Own `node_modules`
   become: yes
   shell: "chown -R {{ user }} /usr/lib/node_modules"
-
-# - name: Start docker daemon at boot.
-#   systemd:
-#     name: docker
-#     enabled: yes
-#   when: ansible_distribution == 'CentOS'
 
 - name: Install RCM to manage dotfiles.
   become: yes

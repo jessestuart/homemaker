@@ -1,4 +1,11 @@
 ---
+- name: Ensure python is installed -- required for Ansible module execution.
+  become: yes
+  become_user: root
+  raw: |
+    test -e /usr/bin/python ||
+    (yum update -y && yum install -y python)
+
 - name: Create SSH users.
   hosts: all
   become: yes
@@ -9,11 +16,24 @@
 
 - name: Ensure at least one user has been created.
   hosts: all
-  become: yes
   tasks:
-    - shell: ls /home | wc -l | tr -d ' '
+    - name: Register the number of users created by listing `/home`.
+      shell: ls /home | wc -l | tr -d ' '
       register: home_dirs
+      changed_when: no
 
+- name: Remove root access & harden box security.
+  become: yes
+  hosts: all
+  gather_facts: yes
+  tags: opsec
+  vars_files:
+    - host_vars/main.yml
+  roles:
+    - name: opsec
+      when: home_dirs.stdout | int > 0
+
+# TODO
 # - name: Lock down SSH access.
 #   hosts: all
 #   become: yes
