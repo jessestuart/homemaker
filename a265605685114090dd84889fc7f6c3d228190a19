@@ -1,0 +1,8 @@
+[ver:1,total:1080]
+Vagrantfile:810,1515308400:540,1515312000:270,m
+ansible/roles/homemaker/tasks/main.yml:90,1515312000:90,m
+ansible/group_vars/all/users.yml:60,1515308400:60,d
+ansible/roles/dotfiles/tasks/main.yml:30,1515308400:30,m
+ansible/requirements.yml:30,1515308400:30,m
+ansible/host_vars/main.yml:30,1515308400:30,r
+README.md:30,1515308400:30,r
