@@ -1,10 +1,21 @@
 ---
 - name: Ensure python is installed -- required for Ansible module execution.
+  hosts: all
   become: yes
-  become_user: root
-  raw: |
-    test -e /usr/bin/python ||
-    (yum update -y && yum install -y python)
+  gather_facts: yes
+  tasks:
+    - name: Install python.
+      raw: |
+        test -e "$(which python)" ||
+        (yum update -y && yum install -y python)
+      when: ansible_distribution == 'CentOS'
+      changed_when: no
+    - name: Install python.
+      raw: |
+        test -e "$(which python)" ||
+        (apt update -y && apt install -y python)
+      when: ansible_distribution == 'Debian'
+      changed_when: no
 
 - name: Create SSH users.
   hosts: all
@@ -13,6 +24,17 @@
   tags: users
   roles:
     - ssh-users
+
+- name: Install EPEL if RHEL-based. (required to install opsec packages)
+  hosts: all
+  become: yes
+  tags:
+    - opsec
+    - epel
+    - centos
+  roles:
+    - name: geerlingguy.repo-epel
+      when: ansible_distribution == 'CentOS'
 
 - name: Ensure at least one user has been created.
   hosts: all

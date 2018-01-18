@@ -9,7 +9,7 @@ ssh_users:
     shell: /bin/bash
     public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC9+S4jlFGmB5uhy41J1g+9YxoT1QDwrlTXavtgsmRiWXfekIqaE6CydYrPjyfPq7lvZsHfbI6kJxiOajpdIUq/gAH0wodxo91fvh7QboT2F7Q+9m5WjrPy7Kmb4VRImd9AUabCzaIEY1NWKoR9lsgSDLynpu4rr6ZgiE6AWgQjRHcVcUT+BBBuz3BzyGsKHZz1cWTRgT1SMx1r/XLHRICG6SnKWQhOSo/1V7BTSFYjdvk4wS23KKDOkvsHqrn/XKUwdLWkcEpx1pLwZXif748gdN/s9+bnYYnRV30og6/3JU+7W6zYqfpzqYnfR9PsH9y/ClibXtMY3c0wjAB8LkKmEm6RC6QPTy/99+OULP8jKSPnkeW9F5EijNIwtrjHoeP4BV0bB1gLQ8jkAnVY0lUAR7vGBsbJuAVy2zcdln57qsagV13yJM8a5uQY9lozYcVnB/wLVFUQNQvsyj1ytr0LeG+7bTs/mxpAoetonuDb0KUQJ6xEm0yiyPq/z+2o2idnM0y4a/Ncn3txcagZXm44P7OeZkSIe4BF0Sk1AsIUlHLDbccVYXKSH3BdcD/0a6Kv+Lbo2l5SgSWNZfQgj2zl5+wXOUioAue416ZsQRc7iUaIw1snOBO5xoKTrE3zCbutTiNGKmzgyuqP9tC+rFFNbO9jDXuCshwLDDNBQ8aLQQ== jdstuart@jdstuart.local
 
-  - name: jesse
+  - name: vagrant
     state: present
     is_sudoer: true
     custom_home: false

@@ -4,14 +4,18 @@
   yum: name=zsh
 
 - name: Install Prezto.
-  become: yes
-  become_user: "{{ user }}"
   git:
     repo: https://github.com/sorin-ionescu/prezto
-    dest: "$HOME/.zprezto"
-    # dest: "/home/{{ user }}/.zprezto"
+    dest: "/home/{{ user }}/.zprezto"
     recursive: yes
     force: yes
+
+- name: Own Prezto directory for user.
+  file:
+    path: "/home/{{ user }}/.zprezto"
+    owner: "{{ user }}"
+    state: directory
+    mode: "u+rw"
 
 - name: Set default shell for user.
   become: yes
