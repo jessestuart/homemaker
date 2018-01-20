@@ -1,0 +1,9 @@
+[ver:1,total:3660]
+Makefile:1360,1516442400:1360,m
+ansible/roles/linuxbrew/tasks/main.yml:840,1516431600:240,1516435200:480,1516442400:120,m
+ansible/roles/homemaker/tasks/main.yml:780,1516424400:660,1516431600:120,m
+cli/cmd/root.go:360,1516395600:300,1516399200:60,m
+ansible/Makefile:180,1516395600:180,d
+cli/main.go:100,1516395600:100,m
+cli/LICENSE:20,1516395600:20,m
+scripts/lint:20,1516442400:20,r
