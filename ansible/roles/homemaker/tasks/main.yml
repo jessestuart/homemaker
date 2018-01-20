@@ -28,6 +28,8 @@
     state: latest
     update_cache: yes
   with_items:
+    - cmake
+    - cargo
     - mosh
     - neovim
     - nodejs
@@ -45,3 +47,4 @@
 
 - name: Set up neovim.
   include_role: name=nvim
+
