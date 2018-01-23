@@ -34,6 +34,7 @@ Vagrant.configure('2') do |config|
     vbox.vm.provision 'shell', inline: 'test -e /usr/bin/python || yes | pacman -S python'
     vbox.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
+      ansible.verbose = true
     end
   end
 
