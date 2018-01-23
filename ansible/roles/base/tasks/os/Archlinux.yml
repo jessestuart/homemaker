@@ -1,3 +1,10 @@
 ---
+- name: Upgrade pacman packages.
+  command: yes | pacman -Suy
+  changed_when: no
+
 - name: Install arch keyring package.
   pacman: name=archlinux-keyring state=latest
+
+- name: Ensure awk is installed.
+  pacman: name=awk state=latest
