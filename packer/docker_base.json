@@ -1,9 +1,9 @@
 {
   "variables": {
     "ansible_connection": "docker",
-    "ansible_host": "default",
+    "ansible_host": "homemaker-arch-base",
     "base_image": "archlinux/base",
-    "vm_name": "jessestuart/homemaker-arch",
+    "vm_name": "jessestuart/homemaker-arch-base",
     "username": "vagrant"
   },
   "builders": [
@@ -33,17 +33,6 @@
         "useradd --create-home -s /bin/bash vagrant && echo -n 'vagrant:vagrant' | chpasswd && mkdir -p /etc/sudoers.d && touch /etc/sudoers.d/vagrant && echo 'vagrant ALL = NOPASSWD: ALL' > /etc/sudoers.d/vagrant && chmod 440 /etc/sudoers.d/vagrant && mkdir -p /home/vagrant/.ssh && chmod 700 /home/vagrant/.ssh",
         "yes | pacman -Syu haveged && systemctl start haveged && systemctl enable haveged && rm -fr /etc/pacman.d/gnupg && pacman-key --init && pacman-key --populate archlinux",
         "yes | pacman -S python sudo"
-      ]
-    },
-    {
-      "type": "ansible",
-      "playbook_file": "./ansible/bootstrap.yml",
-      "user": "vagrant",
-      "extra_arguments": [
-        "--extra-vars",
-        "ansible_host={{user `ansible_host`}} ansible_connection={{user `ansible_connection`}}",
-        "--skip-tags",
-        ""
       ]
     }
   ],

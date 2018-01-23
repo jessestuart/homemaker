@@ -6,14 +6,12 @@
 - name: Ensure pip is installed.
   include_role: name=pip
 
-# - name: Ensure pip is up-to-date.
-#   command: pip install --upgrade pip
-
 - name: Ensure required packages are installed.
   package:
     name: "{{ item }}"
     state: latest
   with_items:
+    - awk
     - coreutils
     - curl
     - git
