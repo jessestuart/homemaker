@@ -1,5 +1,4 @@
 ---
----
 - name: Ensure all existing packages are up-to-date.
   yum:
     name: '*'

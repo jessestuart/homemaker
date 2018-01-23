@@ -1,10 +1,14 @@
 # vi: set ft=ruby :
-Vagrant.configure('2') do |config|
 
-  # =======================================
-  # Definitions for the VirtualBox machine.
-  # =======================================
+# Specify Vagrant version & Vagrant API version.
+Vagrant.require_version '>= 1.6.0'
+VAGRANTFILE_API_VERSION = '2'
 
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # =============================================
+  # Definition for the CentOS VirtualBox machine.
+  # =============================================
   config.vm.define 'default', autostart: true do |vbox|
     vbox.vm.box = 'centos/7'
     vbox.vm.provider 'virtualbox' do |v, override|
@@ -12,15 +16,16 @@ Vagrant.configure('2') do |config|
       v.cpus = 2
       override.nfs.functional = false
     end
-
     config.ssh.insert_key = true
-
     vbox.vm.provision 'shell', inline: 'yum -y update; yum -y install python'
     vbox.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
     end
   end
 
+  # ===========================================
+  # Definition for the Arch VirtualBox machine.
+  # ===========================================
   config.vm.define 'arch', autostart: false do |vbox|
     vbox.vm.box = 'archlinux/archlinux'
     vbox.vm.provider 'virtualbox' do |v, override|
@@ -28,10 +33,9 @@ Vagrant.configure('2') do |config|
       v.cpus = 2
       override.nfs.functional = false
     end
-
     config.ssh.insert_key = true
-
-    vbox.vm.provision 'shell', inline: 'test -e /usr/bin/python || yes | pacman -S python'
+    vbox.vm.provision 'shell',
+      inline: 'test -e /usr/bin/python || yes | pacman -S python'
     vbox.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
       ansible.verbose = true
@@ -42,7 +46,7 @@ Vagrant.configure('2') do |config|
   # Definitions for the Docker machine.
   # ======================================
 
-  config.vm.define 'docker', autostart: true do |d|
+  config.vm.define 'docker', autostart: false do |d|
     d.vm.provider :docker do |docker, override|
       override.vm.box = nil
       override.vm.allowed_synced_folder_types = :rsync if ENV.has_key?('CIRCLECI')
@@ -53,9 +57,6 @@ Vagrant.configure('2') do |config|
       docker.env = {
         :SSH_USER => 'vagrant',
         :SSH_SUDO => 'ALL=(ALL) NOPASSWD:ALL',
-        :LANG     => 'en_US.UTF-8',
-        :LANGUAGE => 'en_US:en',
-        :LC_ALL   => 'en_US.UTF-8',
         :SSH_INHERIT_ENVIRONMENT => 'true',
       }
       override.ssh.proxy_command = "\

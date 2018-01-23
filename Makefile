@@ -17,6 +17,7 @@ lint:
 clean:
 	@rm -rf **/*.retry
 	@rm -rf ./packer/packer_cache
+	vagrant destroy
 
 .PHONY: all
 all:
