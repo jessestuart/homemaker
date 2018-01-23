@@ -1,5 +1,5 @@
 ---
-- name: Install OS specific deps.
+- name: Install OS-specific deps.
   gather_facts: yes
   include_tasks: "os/{{ ansible_os_family }}.yml"
 

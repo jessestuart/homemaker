@@ -50,8 +50,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     d.vm.provider :docker do |docker, override|
       override.vm.box = nil
       override.vm.allowed_synced_folder_types = :rsync if ENV.has_key?('CIRCLECI')
-      docker.image = "jdeathe/centos-ssh:centos-7-2.3.0"
-      docker.name = "homemaker"
+      docker.image = 'jdeathe/centos-ssh:centos-7-2.3.1'
+      docker.name = 'homemaker'
       docker.remains_running = true
       docker.has_ssh = true
       docker.env = {
@@ -59,10 +59,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         :SSH_SUDO => 'ALL=(ALL) NOPASSWD:ALL',
         :SSH_INHERIT_ENVIRONMENT => 'true',
       }
-      override.ssh.proxy_command = "\
+      override.ssh.proxy_command = '\
         docker run -i --rm --link homemaker alpine/socat - \
           TCP:homemaker:22,retry=3,interval=2 \
-      "
+      '
     end
     d.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/bootstrap.yml'
