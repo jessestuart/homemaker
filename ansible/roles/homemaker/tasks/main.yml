@@ -1,35 +1,16 @@
 ---
-- name: Ensure yum-utils are installed.
-  # This is required on some providers for the `yum-config-manager` command
-  # to be present.
-  yum: name=yum-utils state=latest
+- name: Install OS-specific prequisites.
+  include_tasks: "./os/{{ ansible_os_family }}.yml"
 
-- name: Ensure yarn repo is installed.
-  become: yes
-  shell: |
-    yum-config-manager --add-repo=https://dl.yarnpkg.com/rpm/yarn.repo
-
-- name: Ensure ripgrep repo is installed.
-  become: yes
-  shell: |
-    # yamllint disable-line
-    yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
-
-- name: Install python 3.
-  yum:
-    name: "{{ item }}"
-  with_items:
-    - python36u
-    - python36u-pip
+- name: Ensure cmake is present.
+  package: name=cmake state=present
 
 - name: Install the nice things.
-  yum:
+  package:
     name: "{{ item }}"
     state: latest
-    update_cache: yes
   with_items:
-    - cmake
-    - cargo
+    - rust
     - mosh
     - neovim
     - nodejs
@@ -38,7 +19,9 @@
 
 - name: Own `node_modules`
   become: yes
-  shell: "chown -R {{ user }} /usr/lib/node_modules"
+  file:
+    path: /usr/lib/node_modules
+    owner: "{{ user }}"
 
 - name: Install RCM to manage dotfiles.
   become: yes

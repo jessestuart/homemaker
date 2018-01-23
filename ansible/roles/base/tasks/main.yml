@@ -1,30 +1,18 @@
 ---
-- name: Ensure all existing packages are up-to-date.
-  yum:
-    name: '*'
-    state: latest
-
-- name: Ensure CentOS EPEL repos are available.
-  include_role:
-    name: geerlingguy.repo-epel
-
-- name: Ensure IUS (Inline with Upstream Stable) is available.
-  yum:
-    name: https://centos7.iuscommunity.org/ius-release.rpm
-    state: present
+- name: Install OS specific deps.
+  gather_facts: yes
+  include_tasks: "os/{{ ansible_os_family }}.yml"
 
 - name: Ensure pip is installed.
-  include_role: name=geerlingguy.pip
+  include_role: name=pip
 
-- name: Ensure pip is up-to-date.
-  command: pip install --upgrade pip
+# - name: Ensure pip is up-to-date.
+#   command: pip install --upgrade pip
 
 - name: Ensure required packages are installed.
-  when: ansible_distribution == 'CentOS'
-  yum:
+  package:
     name: "{{ item }}"
     state: latest
-    update_cache: yes
   with_items:
     - coreutils
     - curl

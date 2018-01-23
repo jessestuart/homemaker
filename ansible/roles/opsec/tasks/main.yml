@@ -1,11 +1,11 @@
 ---
 - name: Ensure fail2ban is installed.
-  yum: name=fail2ban state=latest
+  package: name=fail2ban state=latest
   notify:
     - Restart fail2ban service
 
 - name: Ensure ufw is installed.
-  yum: name=ufw state=latest
+  package: name=ufw state=latest
 
 - name: Configure ufw defaults
   ufw: direction={{ item.direction }} policy={{ item.policy }}

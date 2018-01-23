@@ -1,74 +1,65 @@
 ---
-- name: Install base dependencies.
-  become: yes
-  gather_facts: yes
-  hosts: all
-  tags: dependencies
-  vars_files:
-    - host_vars/main.yml
-  roles:
-    - base
-
-# TODO Get this working again.
-# - name: Set up NTP.
+# - name: Install base dependencies.
+#   become: yes
 #   gather_facts: yes
+#   hosts: all
+#   tags: dependencies
+#   vars_files:
+#     - host_vars/main.yml
+#   roles:
+#     - base
+
+# - name: Ensure pip is installed and up-to-date.
 #   become: yes
 #   hosts: all
-#   when: ansible_virtualization_type != 'docker'
+#   tags: pip
 #   roles:
-#     - bennojoy.ntp
+#     - geerlingguy.pip
 
-- name: Ensure pip is installed and up-to-date.
-  become: yes
-  hosts: all
-  tags: pip
-  roles:
-    - geerlingguy.pip
+# - name: Ensure Docker is installed.
+#   become: yes
+#   hosts: all
+#   tags:
+#     - dependencies
+#     - docker
+#   roles:
+#     - docker
+#   # Ignore errors, because the service module fails in CI.
+#   ignore_errors: yes
 
-- name: Ensure Docker is installed.
-  become: yes
-  hosts: all
-  tags:
-    - dependencies
-    - docker
-  roles:
-    - geerlingguy.docker
-  # Ignore errors, because the service module fails in CI.
-  ignore_errors: yes
+# - name: Ensure tmux is installed.
+#   hosts: all
+#   become: yes
+#   gather_facts: yes
+#   vars_files:
+#     - host_vars/main.yml
+#   tags:
+#     - dependencies
+#     - tmux
+#   roles:
+#     - tmux
 
-- name: Ensure tmux is installed.
-  hosts: all
-  become: yes
-  gather_facts: yes
-  vars_files:
-    - host_vars/main.yml
-  tags:
-    - dependencies
-    - tmux
-  roles:
-    - tmux
+# - name: Install zsh and prezto.
+#   hosts: all
+#   become: yes
+#   vars_files:
+#     - 'host_vars/main.yml'
+#   tags:
+#     - dependencies
+#     - zsh
+#   roles:
+#     - zsh
 
-- name: Install zsh and prezto.
-  hosts: all
-  become: yes
-  vars_files:
-    - 'host_vars/main.yml'
-  tags:
-    - dependencies
-    - zsh
-  roles:
-    - zsh
-
-- name: Install Go.
-  become: yes
-  vars_files:
-    - 'host_vars/main.yml'
-  hosts: all
-  tags:
-    - dependencies
-    - go
-  roles:
-    - joshualund.golang
+# - name: Install Go.
+#   become: yes
+#   vars_files:
+#     - 'host_vars/main.yml'
+#   hosts: all
+#   tags:
+#     - dependencies
+#     - go
+#   roles:
+#     - joshualund.golang
 
 - name: Make yourself at home.
   become: yes
@@ -80,18 +71,11 @@
   roles:
     - homemaker
 
-- name: Install dotfiles.
-  hosts: all
-  become: yes
-  vars_files:
-    - host_vars/main.yml
-  tags: dotfiles
-  roles:
-    - dotfiles
-
-- name: Cleanup the cruft.
-  become: yes
-  hosts: all
-  tasks:
-    - name: Remove `/vagrant` folder.
-      file: path=/vagrant state=absent
+# - name: Install dotfiles.
+#   hosts: all
+#   become: yes
+#   vars_files:
+#     - host_vars/main.yml
+#   tags: dotfiles
+#   roles:
+#     - dotfiles

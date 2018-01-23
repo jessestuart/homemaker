@@ -1,0 +1,3 @@
+---
+- name: Install pip.
+  include_role: geerlingguy.pip

@@ -1,7 +1,6 @@
 ---
 - name: Install zsh.
-  become: yes
-  yum: name=zsh
+  package: name=zsh
 
 - name: Install Prezto.
   git:

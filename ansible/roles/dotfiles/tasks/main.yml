@@ -25,5 +25,5 @@
 - name: UNLEASH THE DOTFILES!
   become: yes
   become_user: "{{ user }}"
-  shell: /usr/local/bin/rcup -d "$HOME/dotfiles"
+  command: rcup -d "$HOME/dotfiles"
   ignore_errors: yes

@@ -3,6 +3,7 @@
   shell: tmux -V | sed 's/tmux //' || false
   ignore_errors: true
   register: tmux_version
+  changed_when: no
 
 - name: End play if tmux is already up-to-date.
   meta: end_play
@@ -10,16 +11,25 @@
 
 - name: Ensure tmux dependencies are installed.
   become: yes
-  yum:
+  package:
     name: "{{ item }}"
     state: latest
     update_cache: yes
   with_items:
     - gcc
     - libevent
-    - libevent-devel
     - ncurses
+
+- name: Ensure CentOS-specific tmux dependencies are installed.
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - libevent-devel
     - ncurses-devel
+  when: ansible_distribution == 'CentOS'
 
 - name: Pull down tmux 2.6 release.
   become: yes

@@ -1,7 +1,7 @@
 ---
 - name: Install cmake (required later on to build from source).
   become: yes
-  yum: name=cmake
+  package: name=cmake
 
 - name: Set up git2go.
   become: yes
