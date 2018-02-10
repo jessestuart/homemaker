@@ -51,14 +51,6 @@
     - name: geerlingguy.repo-epel
       when: ansible_distribution == 'CentOS'
 
-- name: Ensure at least one user has been created.
-  hosts: all
-  tasks:
-    - name: Register the number of users created by listing `/home`.
-      shell: ls /home | wc -l | tr -d ' '
-      register: home_dirs
-      changed_when: no
-
 - name: Remove root access & harden box security.
   become: yes
   hosts: all
@@ -66,8 +58,13 @@
   tags: opsec
   vars_files:
     - host_vars/main.yml
-  roles:
-    - name: opsec
+  tasks:
+    - name: Ensure at least one user has been created.
+      shell: ls /home | wc -l | tr -d ' '
+      register: home_dirs
+      changed_when: no
+    - name: Run the opsec playbook.
+      include_role: name=opsec
       when: home_dirs.stdout | int > 0
 
 # TODO

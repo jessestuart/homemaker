@@ -76,6 +76,15 @@
     regexp: '127.0.0.1'
     line: "127.0.0.1 localhost {{ hostname }}"
 
+- name: Deny password-based login.
+  lineinfile:
+    state: present
+    dest: /etc/ssh/sshd_config
+    regexp: PasswordAuthentication
+    line: 'PasswordAuthentication no'
+  notify:
+    - Restart ssh service
+
 # - name: Remove root public keys
 #   file:
 #     state: absent
