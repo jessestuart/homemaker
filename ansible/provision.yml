@@ -1,21 +1,36 @@
 ---
-- name: Ensure python is installed -- required for Ansible module execution.
-  hosts: all
+- name: Ensure Python is installed.
   become: yes
-  gather_facts: yes
+  gather_facts: no
+  hosts: all
+  tags: first-run
   tasks:
-    - name: Install python.
-      raw: |
-        test -e "$(which python)" ||
-        (yum update -y && yum install -y python)
-      when: ansible_distribution == 'CentOS'
+    - raw: (test -e /usr/bin/python) || yum -y -q install python
       changed_when: no
-    - name: Install python.
-      raw: |
-        test -e "$(which python)" ||
-        (apt update -y && apt install -y python)
-      when: ansible_distribution == 'Debian'
+
+- name: Ensure we can provision without tty.
+  hosts: all
+  tags: first-run
+  tasks:
+    - raw: sed -i.bak -e '/Defaults.*requiretty/s/^/#/' /etc/sudoers
       changed_when: no
+
+# - name: Ensure python is installed -- required for Ansible module execution.
+#   hosts: all
+#   become: yes
+#   tasks:
+#     - name: Install python.
+#       raw: |
+#         test -e "$(which python)" ||
+#         (yum update -y && yum install -y python)
+#       # when: ansible_distribution == 'CentOS'
+#       changed_when: no
+#     - name: Install python.
+#       raw: |
+#         test -e "$(which python)" ||
+#         (apt update -y && apt install -y python)
+#       # when: ansible_distribution == 'Debian'
+#       changed_when: no
 
 - name: Create SSH users.
   hosts: all

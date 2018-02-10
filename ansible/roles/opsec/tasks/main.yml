@@ -2,7 +2,7 @@
 - name: Ensure fail2ban is installed.
   package: name=fail2ban state=latest
   notify:
-    - Restart fail2ban service
+    - Restart fail2ban
 
 - name: Ensure ufw is installed.
   package: name=ufw state=latest

@@ -3,5 +3,8 @@
 .DS_Store
 .gtm/
 .vagrant
+ansible/.cache/
+ansible/hosts
+ansible/host_vars/main.yml
 build/
 packer_cache/
