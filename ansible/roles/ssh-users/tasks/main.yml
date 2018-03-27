@@ -6,6 +6,9 @@
   yum: name=libselinux-python
   when: ansible_os_family == 'RedHat'
 
+- name: Ensure sudoers file exists.
+  file: path=/etc/sudoers state=touch
+
 - name: Allow non-tty sudo
   lineinfile: >
     dest=/etc/sudoers
@@ -85,6 +88,13 @@
     state: present
     regexp: "#includedir\\s+/etc/sudoers.d"
     line: "#includedir /etc/sudoers.d"
+
+- name: Ensure sudoers each have a file in /etc/sudoers.d/
+  file:
+    path: "/etc/sudoers.d/{{ item.name }}"
+    state: touch
+  when: (item[state_key] == "present") and (item.is_sudoer)
+  with_items: "{{ users_list }}"
 
 - name: Ensure sudoers each have a file in /etc/sudoers.d/
   # No password required. Be VERY CAREFUL editing this.

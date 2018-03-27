@@ -39,7 +39,7 @@
   roles:
     - tmux
 
-- name: Install zsh and prezto.
+- name: Ensure zsh and antibody plugin manager are installed.
   hosts: all
   become: yes
   vars_files:
@@ -50,7 +50,7 @@
   roles:
     - zsh
 
-- name: Install Go.
+- name: Ensure Go is installed.
   become: yes
   vars_files:
     - 'host_vars/main.yml'
@@ -74,6 +74,7 @@
 - name: Install dotfiles.
   hosts: all
   become: yes
+  become_user: "{{ user }}"
   vars_files:
     - host_vars/main.yml
   tags: dotfiles

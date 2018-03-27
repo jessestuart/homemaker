@@ -26,4 +26,8 @@
   become: yes
   become_user: "{{ user }}"
   command: /usr/local/bin/rcup -d "$HOME/dotfiles"
-  ignore_errors: yes
+
+- name: Source *rc files.
+  become: yes
+  become_user: "{{ user }}"
+  command: source "$HOME/.zshrc"

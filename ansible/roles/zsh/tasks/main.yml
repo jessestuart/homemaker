@@ -1,23 +1,19 @@
 ---
-- name: Install zsh.
-  package: name=zsh
+- name: Ensure zsh is installed.
+  package: name=zsh state=latest
 
-- name: Install Prezto.
-  git:
-    repo: https://github.com/sorin-ionescu/prezto
-    dest: "/home/{{ user }}/.zprezto"
-    recursive: yes
-    force: yes
+- name: Check if antibody is installed.
+  stat: path=/usr/local/bin/antibody
+  register: antibody_binary
 
-- name: Own Prezto directory for user.
-  file:
-    path: "/home/{{ user }}/.zprezto"
-    owner: "{{ user }}"
-    state: directory
-    mode: "u+rw"
+- name: Ensure antibody is installed.
+  command: curl -sL git.io/antibody | bash -s
+  ignore_errors: yes
+  when: antibody_binary.stat.exists == False
 
-- name: Set default shell for user.
+- name: Set default shell for user to zsh.
   become: yes
+  become_user: "{{ user }}"
   user:
     name: "{{ user }}"
     shell: /bin/zsh
