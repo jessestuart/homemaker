@@ -12,7 +12,7 @@
   hosts: all
   tags: first-run
   tasks:
-    - raw: sed -i.bak -e '/Defaults.*requiretty/s/^/#/' /etc/sudoers
+    - raw: touch /etc/sudoers && sed -i.bak -e '/Defaults.*requiretty/s/^/#/' /etc/sudoers
       changed_when: no
 
 # - name: Ensure python is installed -- required for Ansible module execution.

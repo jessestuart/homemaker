@@ -3,31 +3,32 @@
   include_tasks: "./os/{{ ansible_os_family }}.yml"
 
 - name: Ensure cmake is present.
+  become_user: root
   package: name=cmake state=present
 
 - name: Install the nice things.
+  become: yes
   package:
     name: "{{ item }}"
     state: latest
   with_items:
-    - rust
+    # - rust
     - mosh
-    - neovim
+    # - neovim
     - nodejs
-    - ripgrep
-    - yarn
+    # - ripgrep
+    # - yarn
 
 - name: Own `node_modules`
-  become: yes
   file:
     path: /usr/lib/node_modules
+    state: directory
     owner: "{{ user }}"
 
 - name: Install RCM to manage dotfiles.
-  become: yes
   tags: rcm
   include_role: name=rcm
 
-- name: Set up neovim.
-  include_role: name=nvim
+# - name: Set up neovim.
+#   include_role: name=nvim
 

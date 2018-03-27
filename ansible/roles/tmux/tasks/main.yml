@@ -17,8 +17,17 @@
     update_cache: yes
   with_items:
     - gcc
-    - libevent
-    - ncurses
+    - libevent-dev
+
+- name: Ensure Debian-specific dependencies are installed.
+  package:
+    name: "{{ item }}"
+    state: latest
+  when: ansible_os_family == 'Debian'
+  with_items:
+    - ncurses-base
+    - libncurses5-dev
+    - libncursesw5-dev
 
 - name: Ensure CentOS-specific tmux dependencies are installed.
   become: yes
@@ -27,7 +36,9 @@
     state: latest
     update_cache: yes
   with_items:
+    - libevent
     - libevent-devel
+    - ncurses
     - ncurses-devel
   when: ansible_distribution == 'CentOS'
 

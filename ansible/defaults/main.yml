@@ -1,9 +1,9 @@
 ---
 users:
-  - username: jesse
-    name: jesse
+  - username: pi
+    name: pi
     groups: ["docker", "ssh", "sudo", "wheel"]
-    home: /home/jesse
+    home: /home/pi
     ssh_key: "$(echo ~/.ssh/id_rsa.pub)"
 
 groups_to_create:
