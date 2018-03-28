@@ -3,9 +3,11 @@
 [![CircleCI][circleci-badge]][circleci-url]
 [![SemaphoreCI Build Status][semaphoreci-badge]][semaphoreci-link]
 
-`homemaker` is a tool composing [Vagrant][vagrant-url], [Packer][packer-url],
-and [Ansible][ansible-url] to automate the creation of machine environments
-that "feel like home".
+## What is this nonsense?
+
+`homemaker` is a developer tool composing [Vagrant][vagrant-url],
+[Packer][packer-url], and [Ansible][ansible-url] to automate the creation of
+machine environments that "feel like home".
 
 <p align="center">
   <img src="http://jstu.art/oWBB/980x.gif" />
@@ -13,15 +15,20 @@ that "feel like home".
 
 You know that feeling -- you spin up a box, only to find yourself on the verge
 of self-defenestration when none of your aliases work; none of the right
-dependencies are installed; and what should be a quick task turns into a wasted
-morning. Nobody wants that.
+dependencies are installed; and what you thought would be a quick proof-of-concept
+turns into a wasted morning of productivity. Nobody wants that.
 
 <p align="center">
   <img src="http://jstu.art/oWQD/tenor.gif">
 </p>
 
+
+---------------------------------------
+
+## How does this help me?
+
 Homemaker is an opinionated devbox-generator for everyday use, whether locally
-(i.e., via a Vagrant box) or cloud-based (e.g., by using a Packer builder for
+(e.g., via a Vagrant box) or cloud-based (by using a Packer builder for
 AWS, Digital Ocean, Vultr, etc.). Homemaker was created largely because I got
 sick of spinning up boxes and seeing some variation of this:
 
@@ -30,11 +37,12 @@ sick of spinning up boxes and seeing some variation of this:
 => # Cool! I'm in! Let me just list what's in the current directory:
 [vagrant@homemaker-1514256437]~% la
 => zsh: command not found: la
-=> # Oh right, this is a fresh box. Well at least it has Docker installed,
-=> # right? I'll just run this...
-[vagrant@homemaker-1514256437]~% dk ps
-zsh: command not found: dk
-=> # Well that was dumb. If only I had a way to automatically load a fully
+=> # Oh right, this is a fresh box. Aight, I know my base script set Docker up
+=> # on here — let's check that the daemon's responding:
+=> # (Proceed to insert another custom alias)
+[vagrant@homemaker-1514256437]~% dps
+zsh: command not found: dps
+=> # Well that was dumb. If only I had a way to quickly spin up a fully
 => # provisioned box **with all my custom dotfiles** I've so carefully curated
 => # over the years... Now that would be the bee's knees.
 ```
@@ -44,19 +52,15 @@ feel like home -- none of the bloat of a full desktop OS, just the dependencies
 & libraries you need to get to get cookin', and (most importantly), your
 trusty, dependable dotfiles.
 
-### Usage
+## How do I use this?
 
 `homemaker` supports several methods of execution, depending on your needs.
 
-#### Local VM
+### Local VM
 
 If all you need is a isolated, disposable development environment, then using
 the provided Vagrantfile to run `homemaker` as a local VM is a great place to
 start.
-
-<!-- * ============================================================= -->
-<!-- * TODO: Add Makefile to install necessary vagrant plugins, etc. -->
-<!-- * ============================================================= -->
 
 ```sh
 git clone https://github.com/jessestuart/homemaker
@@ -72,8 +76,9 @@ advises against using package managers:
 > "Typically these packages are missing dependencies or include very outdated
 > versions of Vagrant. [...] Please use the official installers on the
 > downloads page."
-> Anecdotally, I've never had issues on macOS with simply running
-> `cask install vagrant`, although YMMV.
+
+Anecdotally, I've never had issues on macOS with simply running
+`cask install vagrant`, although YMMV.
 
 #### Cloud-based machine images
 
@@ -87,7 +92,8 @@ supported are:
 * [x] Digital Ocean
 * [x] Vultr
 
-Support for other services, including Linode and GCE, is on the roadmap.
+Support for other services, including Linode and GCE, has been tested but not
+yet documented.
 
 <!-- * ============================================================== -->
 <!-- * TODO: Add instructions for building and running Packer images. -->
@@ -97,11 +103,12 @@ Support for other services, including Linode and GCE, is on the roadmap.
 
 Homemaker is still a work in progress. Shortcomings I plan on improving upon:
 
-* Support dotfile management systems beside Thoughtbot's RCM.
-* Update roles to be distro-agnostic — `homemaker` currently only supports
-  CentOS, but it would be super to be able to spin up environments
-  in any major distro (Debian and friends, Alpine, etc). I've already make some
-  preliminary progress on this front. PR's always welcome and encouraged.
+* Support dotfile management systems other than Thoughtbot's RCM.
+* Update roles to be more distro-agnostic — `homemaker` currently only supports
+  CentOS and Debian/Ubuntu, but it would be super to be able to spin up
+  environments in any major distro, particularly more lightweight distros such
+  as Alpine. I've already make some preliminary progress on this front. PR's
+  always welcome and encouraged.
 
 [ansible-url]: https://github.com/ansible/ansible
 [circleci-badge]: https://circleci.com/gh/jessestuart/homemaker.svg?style=shield

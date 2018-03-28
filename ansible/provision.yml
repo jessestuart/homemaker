@@ -1,4 +1,23 @@
 ---
+- name: Ensure python is installed -- required for Ansible module execution.
+  gather_facts: no
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install python.
+      raw: |
+        test -e "$(which python)" ||
+        (yum update -y && yum install -y python)
+      when: ansible_distribution == 'CentOS'
+      changed_when: no
+    # TODO: Add conditional check based on `uname` (?)
+    # - name: Install python.
+    #   raw: |
+    #     test -e "$(which python)" ||
+    #     (apt update -y && apt install -y python)
+    #   when: ansible_distribution == 'Debian'
+    #   changed_when: no
+
 - name: Ensure Python is installed.
   become: yes
   gather_facts: no
@@ -15,22 +34,6 @@
     - raw: touch /etc/sudoers && sed -i.bak -e '/Defaults.*requiretty/s/^/#/' /etc/sudoers
       changed_when: no
 
-# - name: Ensure python is installed -- required for Ansible module execution.
-#   hosts: all
-#   become: yes
-#   tasks:
-#     - name: Install python.
-#       raw: |
-#         test -e "$(which python)" ||
-#         (yum update -y && yum install -y python)
-#       # when: ansible_distribution == 'CentOS'
-#       changed_when: no
-#     - name: Install python.
-#       raw: |
-#         test -e "$(which python)" ||
-#         (apt update -y && apt install -y python)
-#       # when: ansible_distribution == 'Debian'
-#       changed_when: no
 
 - name: Create SSH users.
   hosts: all
