@@ -7,13 +7,12 @@
   register: antibody_binary
 
 - name: Ensure antibody is installed.
-  command: curl -sL git.io/antibody | bash -s
+  shell: curl -sL git.io/antibody | bash -s
   ignore_errors: yes
   when: antibody_binary.stat.exists == False
 
 - name: Set default shell for user to zsh.
   become: yes
-  become_user: "{{ user }}"
   user:
     name: "{{ user }}"
     shell: /bin/zsh

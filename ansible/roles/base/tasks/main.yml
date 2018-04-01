@@ -22,6 +22,8 @@
     - wget
 
 - name: Ensure pip packages are installed.
+  gather_facts: yes
   pip: name={{ item }}
   with_items:
     - glances
+  when: ansible_virtualization_type != 'docker'

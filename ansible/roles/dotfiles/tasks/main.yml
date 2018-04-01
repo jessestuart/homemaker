@@ -2,7 +2,7 @@
 - name: Determine if dotfiles directory exists.
   become: yes
   become_user: "{{ user }}"
-  stat: path="$HOME/dotfiles"
+  stat: path="/home/{{ user }}/dotfiles"
   register: dotfiles_dir
 
 - name: Create dotfiles directory.
@@ -10,7 +10,7 @@
   become_user: "{{ user }}"
   when: not dotfiles_dir.stat.exists
   file:
-    path: "$HOME/dotfiles"
+    path: "/home/{{ user }}/dotfiles"
     state: directory
 
 # TODO(20180107) Abstract this out into a variable.
@@ -19,15 +19,15 @@
   become_user: "{{ user }}"
   git:
     repo: https://github.com/jessestuart/dotfiles
-    dest: "$HOME/dotfiles"
+    dest: "/home/{{ user }}/dotfiles"
     force: yes
 
-- name: UNLEASH THE DOTFILES!
+- name: ~* unleash the dotfiles *~
   become: yes
   become_user: "{{ user }}"
-  command: /usr/local/bin/rcup -d "$HOME/dotfiles"
+  command: /usr/local/bin/rcup -d "/home/{{ user }}/dotfiles"
 
 - name: Source *rc files.
   become: yes
   become_user: "{{ user }}"
-  command: source "$HOME/.zshrc"
+  command: source "/home/{{ user }}/.zshrc"
