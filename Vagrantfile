@@ -1,7 +1,7 @@
 # vi: set ft=ruby :
 
 # Specify Vagrant version & Vagrant API version.
-Vagrant.require_version '>= 1.6.0'
+Vagrant.require_version '>= 2'
 VAGRANTFILE_API_VERSION = '2'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|

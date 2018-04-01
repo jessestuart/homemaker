@@ -16,11 +16,6 @@ jobs:
       - checkout
       - setup_remote_docker
 
-      - run:
-          name: Authenticate with Amazon ECR.
-          command: |
-            eval $(${AWS_AUTH_COMMAND})
-
       # This cache is for the docker images. Layer caching is early, so we use
       # a tarball created by `docker save` to cache our images.
       - restore_cache:
@@ -49,13 +44,18 @@ jobs:
             ansible-galaxy install -r ansible/requirements.yml
 
       - run:
+          name: Copy over example `host_vars` so we have some data to work with.
+          command: |
+            cp -f ansible/host_vars/main.example.yml ansible/host_vars/main.yml
+
+      - run:
           name: Build Vagrant box and test Ansible Playbook.
           command: |
             eval $(ssh-agent)
             vagrant up docker --provision
 
       - run:
-          name: Build Docker public image cache as a tarball.
+          name: Build Docker public image cache into a tarball for caching.
           command: |
             mkdir -p /home/vagrant/cache/docker
             IMGS=$(docker images | grep -v 'REPOSITORY\|none' | cut -d ' ' -f 1)
@@ -66,10 +66,17 @@ jobs:
           paths:
             - /home/vagrant/cache/docker
 
+      # NOTE: This is obviously far from the most efficient solution in terms of
+      # image layering, but it gets the job done.
       - run:
           name: Commit the running container to a Docker image.
           command: |
             docker commit $(docker ps -l -q) "${IMAGE_ID}"
+
+      - run:
+          name: Authenticate to Amazon ECR.
+          command: |
+            eval $(${AWS_AUTH_COMMAND})
 
       - run:
           name: Push Docker image to ECR.
