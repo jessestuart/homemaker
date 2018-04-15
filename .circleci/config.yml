@@ -87,3 +87,7 @@ jobs:
               docker tag  "${IMAGE_ID}" "${IMAGE_ID}:latest"
               docker push               "${IMAGE_ID}:latest"
             fi
+
+# workflows:
+#   version: 2
+#   nightly:

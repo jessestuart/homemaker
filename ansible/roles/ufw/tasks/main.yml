@@ -1,0 +1,33 @@
+---
+- name: Ensure ufw is installed.
+  tags: ufw
+  package: name=ufw state=latest
+
+- name: Configure ufw defaults
+  ufw: direction={{ item.direction }} policy={{ item.policy }}
+  tags: ufw
+  with_items:
+    - { direction: 'incoming', policy: 'deny' }
+    - { direction: 'outgoing', policy: 'allow' }
+  notify:
+    - Restart ufw
+
+- name: Configure ufw rules
+  tags: ufw
+  ufw: rule={{ item.rule }} port={{ item.port }} proto={{ item.proto }}
+  with_items:
+    - { rule: 'limit', port: '{{ ssh_port | default("22") }}', proto: 'tcp' }
+    - { rule: 'allow', port: '80', proto: 'tcp' }
+    - { rule: 'allow', port: '443', proto: 'tcp' }
+  notify:
+    - Restart ufw
+
+- name: Enable ufw logging
+  tags: ufw
+  ufw: logging=on
+  notify:
+    - Restart ufw
+
+- name: Enable ufw
+  tags: ufw
+  ufw: state=enabled

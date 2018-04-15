@@ -1,4 +1,9 @@
 ---
+- name: Install RCM to manage dotfiles.
+  become: yes
+  tags: rcm
+  include_role: name=rcm
+
 - name: Determine if dotfiles directory exists.
   stat: path="/home/{{ user }}/dotfiles"
   register: dotfiles_dir

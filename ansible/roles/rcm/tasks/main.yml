@@ -34,6 +34,7 @@
 - name: Build and install the RCM binaries.
   when: rcm_installed|failed
   become: yes
+  become_user: root
   shell: |
     cd /tmp/rcm-1.3.1 && \
     ./configure && \

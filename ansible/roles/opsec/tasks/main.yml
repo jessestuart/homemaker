@@ -1,36 +1,24 @@
 ---
+- name: Install EPEL if RHEL-based. (required to install opsec packages)
+  hosts: all
+  become: yes
+  gather_facts: yes
+  roles:
+    - name: geerlingguy.repo-epel
+      when: ansible_distribution == 'CentOS'
+  tags:
+    - opsec
+    - epel
+    - rhel
+
 - name: Ensure fail2ban is installed.
   package: name=fail2ban state=latest
   notify:
     - Restart fail2ban
 
-- name: Ensure ufw is installed.
-  package: name=ufw state=latest
-
-- name: Configure ufw defaults
-  ufw: direction={{ item.direction }} policy={{ item.policy }}
-  with_items:
-    - { direction: 'incoming', policy: 'deny' }
-    - { direction: 'outgoing', policy: 'allow' }
-  notify:
-    - Restart ufw
-
-- name: Configure ufw rules
-  ufw: rule={{ item.rule }} port={{ item.port }} proto={{ item.proto }}
-  with_items:
-    - { rule: 'limit', port: '{{ ssh_port | default("22") }}', proto: 'tcp' }
-    - { rule: 'allow', port: '80', proto: 'tcp' }
-    - { rule: 'allow', port: '443', proto: 'tcp' }
-  notify:
-    - Restart ufw
-
-- name: Enable ufw logging
-  ufw: logging=on
-  notify:
-    - Restart ufw
-
-- name: Enable ufw
-  ufw: state=enabled
+- name: Ensure ufw is configured.
+  tags: ufw
+  include_role: name=ufw
 
 # ====================================================================
 # To protect against man-in-the-middle attacks, at least use the local
@@ -89,7 +77,6 @@
 #   file:
 #     state: absent
 #     path: /root/.ssh/authorized_keys
-
 # - name: Deny root login
 #   lineinfile:
 #     state: present

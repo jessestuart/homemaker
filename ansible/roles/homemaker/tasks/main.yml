@@ -25,10 +25,6 @@
     state: directory
     owner: "{{ user }}"
 
-- name: Install RCM to manage dotfiles.
-  tags: rcm
-  include_role: name=rcm
-
 # - name: Set up neovim.
 #   include_role: name=nvim
 

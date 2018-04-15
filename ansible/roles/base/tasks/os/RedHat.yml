@@ -5,10 +5,11 @@
     state: latest
 
 - name: Ensure CentOS EPEL repos are available.
+  ignore_errors: yes
   include_role:
     name: geerlingguy.repo-epel
 
-- name: Ensure IUS (Inline with Upstream Stable) is available.
+- name: Ensure IUS (Inline with Upstream Stable) RPM is available.
   yum:
     name: https://centos7.iuscommunity.org/ius-release.rpm
     state: present
