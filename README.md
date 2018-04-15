@@ -32,14 +32,14 @@ Homemaker is an opinionated devbox-generator for everyday use, whether locally
 AWS, Digital Ocean, Vultr, etc.). Homemaker was created largely because I got
 sick of spinning up boxes and seeing some variation of this:
 
-```sh
+```console
 [vagrant@homemaker-1514256437]~%
 => # Cool! I'm in! Let me just list what's in the current directory:
 [vagrant@homemaker-1514256437]~% la
 => zsh: command not found: la
 => # Oh right, this is a fresh box. Aight, I know my base script set Docker up
 => # on here — let's check that the daemon's responding:
-=> # (Proceed to insert another custom alias)
+=> # (...Proceed to insert another custom alias, because muscle memory)
 [vagrant@homemaker-1514256437]~% dps
 zsh: command not found: dps
 => # Well that was dumb. If only I had a way to quickly spin up a fully
@@ -62,25 +62,25 @@ If all you need is a isolated, disposable development environment, then using
 the provided Vagrantfile to run `homemaker` as a local VM is a great place to
 start.
 
-```sh
-git clone https://github.com/jessestuart/homemaker
-cd homemaker
-vagrant up
+```console
+$ git clone https://github.com/jessestuart/homemaker
+$ cd homemaker
+$ vagrant up
 ```
 
 NOTE: This assumes that you have the `vagrant` CLI tool installed on the host
 machine. If not, consult the Vagrant [installation docs][vagrant-installation]
 to obtain the installation binary for your OS. Note that Hashicorp strongly
-advises against using package managers:
+advises against relying on your OS' package manager to install Vagrant:
 
 > "Typically these packages are missing dependencies or include very outdated
 > versions of Vagrant. [...] Please use the official installers on the
 > downloads page."
 
 Anecdotally, I've never had issues on macOS with simply running
-`cask install vagrant`, although YMMV.
+`cask install vagrant`. YMMV.
 
-#### Cloud-based machine images
+#### Packer & custom machine images
 
 `homemaker` can also be used to build identical machine images for one of the
 several major cloud compute providers, in case you want to spin up an
@@ -92,8 +92,11 @@ supported are:
 * [x] Digital Ocean
 * [x] Vultr
 
-Support for other services, including Linode and GCE, has been tested but not
-yet documented.
+Support for other hosting platforms has been tested but is not currently maintained:
+
+- Linode
+- Google Compute Engine
+- Scaleway
 
 <!-- * ============================================================== -->
 <!-- * TODO: Add instructions for building and running Packer images. -->
@@ -101,7 +104,7 @@ yet documented.
 
 ### Disclaimer
 
-Homemaker is still a work in progress. Shortcomings I plan on improving upon:
+Homemaker is still a work in progress. Things I plan on improving upon:
 
 * Support dotfile management systems other than Thoughtbot's RCM.
 * Update roles to be more distro-agnostic — `homemaker` currently only supports

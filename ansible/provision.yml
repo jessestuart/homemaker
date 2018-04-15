@@ -34,21 +34,6 @@
   tasks:
     - package: name=dmidecode state=latest
 
-  # tasks:
-  #   - name: Install python.
-  #     raw: |
-  #       test -e "$(which python)" ||
-  #       (yum update -y && yum install -y python)
-  #     when: ansible_distribution == 'CentOS'
-  #     changed_when: no
-    # TODO: Add conditional check based on `uname` (?)
-    # - name: Install python.
-    #   raw: |
-    #     test -e "$(which python)" ||
-    #     (apt update -y && apt install -y python)
-    #   when: ansible_distribution == 'Debian'
-    #   changed_when: no
-
 - name: Ensure we can provision without tty.
   hosts: all
   tags: first-run

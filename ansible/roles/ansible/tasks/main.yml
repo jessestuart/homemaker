@@ -1,5 +1,5 @@
 # ========================================================================
-# `ansible` role contains prequisite dependencies needed to provision via
+# `ansible` role contains prerequisite dependencies needed to provision via
 # Ansible over SSH.
 # ========================================================================
 ---

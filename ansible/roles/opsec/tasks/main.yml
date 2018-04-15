@@ -1,11 +1,10 @@
 ---
 - name: Install EPEL if RHEL-based.
-  hosts: all
   become: yes
-  gather_facts: yes
-  roles:
-    - name: geerlingguy.repo-epel
-      when: ansible_distribution == 'CentOS'
+  include_roles:
+    - geerlingguy.repo-epel
+  when: ansible_distribution == 'CentOS'
+  ignore_errors: yes
   tags:
     - opsec
     - epel
