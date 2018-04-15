@@ -4,10 +4,11 @@
     name: '*'
     state: latest
 
-- name: Ensure CentOS EPEL repos are available.
-  ignore_errors: yes
-  include_role:
-    name: geerlingguy.repo-epel
+# - name: Ensure CentOS EPEL repos are available.
+#   ignore_errors: yes
+#   failed_when: no
+#   include_role:
+#     name: geerlingguy.repo-epel
 
 - name: Ensure IUS (Inline with Upstream Stable) RPM is available.
   yum:

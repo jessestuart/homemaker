@@ -1,5 +1,5 @@
 ---
-- name: Install EPEL if RHEL-based. (required to install opsec packages)
+- name: Install EPEL if RHEL-based.
   hosts: all
   become: yes
   gather_facts: yes

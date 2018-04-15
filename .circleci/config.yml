@@ -67,7 +67,8 @@ jobs:
             - /home/vagrant/cache/docker
 
       # NOTE: This is obviously far from the most efficient solution in terms of
-      # image layering, but it gets the job done.
+      # image layering, but it gets the job done as a POC to verify playbook
+      # behavior.
       - run:
           name: Commit the running container to a Docker image.
           command: |
@@ -88,6 +89,17 @@ jobs:
               docker push               "${IMAGE_ID}:latest"
             fi
 
-# workflows:
-#   version: 2
-#   nightly:
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+    jobs:
+      - build

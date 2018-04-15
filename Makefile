@@ -16,7 +16,6 @@ clean:
 .PHONY: all
 all:
 	vagrant provision default
-	# TODO
 
 .PHONY: default build-centos
 default:
