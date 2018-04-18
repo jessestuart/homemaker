@@ -1,5 +1,5 @@
 ---
-- name: Install base dependencies and set hostname.
+- name: Install base dependencies.
   become: yes
   gather_facts: yes
   hosts: all
@@ -9,40 +9,12 @@
   roles:
     - base
 
-- name: Create SSH users.
-  become: yes
-  hosts: all
-  tags: ssh
-  roles:
-    - ssh-users
-
-- name: Remove root access & harden box security.
-  become: yes
-  hosts: all
-  tags: opsec
-  vars_files:
-    - host_vars/main.yml
-  roles:
-    - opsec
-
-# TODO Get this working again.
-# - name: Set up NTP.
-#   gather_facts: yes
-#   become: yes
-#   hosts: all
-#   when: ansible_virtualization_type != 'docker'
-#   roles:
-#     - bennojoy.ntp
-
 - name: Ensure pip is installed and up-to-date.
   become: yes
   hosts: all
   tags: pip
-  tasks:
-    - name: Install pip.
-      include_role: name=geerlingguy.pip
-    - name: Also ensure pip is up-to-date.
-      pip: name=pip state=latest
+  roles:
+    - geerlingguy.pip
 
 - name: Ensure Docker is installed.
   become: yes
@@ -51,22 +23,23 @@
     - dependencies
     - docker
   roles:
-    - geerlingguy.docker
+    - docker
   # Ignore errors, because the service module fails in CI.
   ignore_errors: yes
 
 - name: Ensure tmux is installed.
   hosts: all
   become: yes
+  gather_facts: yes
   vars_files:
-    - 'host_vars/main.yml'
+    - host_vars/main.yml
   tags:
     - dependencies
     - tmux
   roles:
     - tmux
 
-- name: Install zsh and prezto.
+- name: Ensure zsh and antibody plugin manager are installed.
   hosts: all
   become: yes
   vars_files:
@@ -77,7 +50,7 @@
   roles:
     - zsh
 
-- name: Install Go.
+- name: Ensure Go is installed.
   become: yes
   vars_files:
     - 'host_vars/main.yml'
@@ -93,7 +66,7 @@
   gather_facts: yes
   hosts: all
   vars_files:
-    - 'host_vars/main.yml'
+    - host_vars/main.yml
   tags: homemaker
   roles:
     - homemaker
@@ -101,16 +74,9 @@
 - name: Install dotfiles.
   hosts: all
   become: yes
+  become_user: "{{ user }}"
   vars_files:
-    - 'host_vars/main.yml'
+    - host_vars/main.yml
   tags: dotfiles
   roles:
     - dotfiles
-
-- name: Cleanup the cruft.
-  become: yes
-  gather_facts: yes
-  hosts: all
-  tasks:
-    - name: Remove `/vagrant` folder.
-      file: path=/vagrant state=absent

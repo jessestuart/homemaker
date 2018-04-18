@@ -12,9 +12,10 @@
 - name: Determine if RCM is installed.
   become: yes
   become_user: "{{ user }}"
-  shell: lsrc &>/dev/null
+  shell: hash lsrc
   register: rcm_installed
   ignore_errors: yes
+  changed_when: no
 
 - name: Pull down RCM tarball.
   become: yes

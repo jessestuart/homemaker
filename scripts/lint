@@ -1,0 +1,5 @@
+#!/bin/bash
+set -ex
+
+PLAYBOOK="$1"
+ansible-lint "./ansible/$PLAYBOOK" -x "ANSIBLE0004,ANSIBLE0010"

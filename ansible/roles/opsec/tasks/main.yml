@@ -1,4 +1,37 @@
 ---
+- name: Ensure fail2ban is installed.
+  package: name=fail2ban state=latest
+  notify:
+    - Restart fail2ban
+
+- name: Ensure ufw is installed.
+  package: name=ufw state=latest
+
+- name: Configure ufw defaults
+  ufw: direction={{ item.direction }} policy={{ item.policy }}
+  with_items:
+    - { direction: 'incoming', policy: 'deny' }
+    - { direction: 'outgoing', policy: 'allow' }
+  notify:
+    - Restart ufw
+
+- name: Configure ufw rules
+  ufw: rule={{ item.rule }} port={{ item.port }} proto={{ item.proto }}
+  with_items:
+    - { rule: 'limit', port: '{{ ssh_port | default("22") }}', proto: 'tcp' }
+    - { rule: 'allow', port: '80', proto: 'tcp' }
+    - { rule: 'allow', port: '443', proto: 'tcp' }
+  notify:
+    - Restart ufw
+
+- name: Enable ufw logging
+  ufw: logging=on
+  notify:
+    - Restart ufw
+
+- name: Enable ufw
+  ufw: state=enabled
+
 # ====================================================================
 # To protect against man-in-the-middle attacks, at least use the local
 # (control) machine to find the right github RSA public key.
@@ -25,14 +58,8 @@
   notify:
     - Restart ssh service
 
-- name: Install docker-py.
-  become: yes
-  pip: name=docker-py state=latest
-  tags: hostname
-
 # Set the hostname as specified in the inventory.
 - name: Set /etc/hostname
-  gather_facts: yes
   become: yes
   tags: hostname
   hostname: name="{{ hostname }}"
@@ -48,6 +75,15 @@
     dest: /etc/hosts
     regexp: '127.0.0.1'
     line: "127.0.0.1 localhost {{ hostname }}"
+
+- name: Deny password-based login.
+  lineinfile:
+    state: present
+    dest: /etc/ssh/sshd_config
+    regexp: PasswordAuthentication
+    line: 'PasswordAuthentication no'
+  notify:
+    - Restart ssh service
 
 # - name: Remove root public keys
 #   file:

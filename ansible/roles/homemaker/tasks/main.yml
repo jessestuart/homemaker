@@ -1,54 +1,34 @@
 ---
-- name: Ensure yum-utils are installed.
-  # This is required on some providers for the `yum-config-manager` command
-  # to be present.
-  yum: name=yum-utils state=latest
+- name: Install OS-specific prequisites.
+  include_tasks: "./os/{{ ansible_os_family }}.yml"
 
-- name: Ensure yarn repo is installed.
-  become: yes
-  shell: |
-    yum-config-manager --add-repo=https://dl.yarnpkg.com/rpm/yarn.repo
-
-- name: Ensure ripgrep repo is installed.
-  become: yes
-  shell: |
-    # yamllint disable-line
-    yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
-
-- name: Install python 3.
-  yum:
-    name: "{{ item }}"
-  with_items:
-    - python36u
-    - python36u-pip
+- name: Ensure cmake is present.
+  become_user: root
+  package: name=cmake state=present
 
 - name: Install the nice things.
-  yum:
+  become: yes
+  package:
     name: "{{ item }}"
     state: latest
-    update_cache: yes
   with_items:
+    # - rust
     - mosh
-    - neovim
+    # - neovim
     - nodejs
-    - ripgrep
-    - rsync
-    - yarn
+    # - ripgrep
+    # - yarn
 
 - name: Own `node_modules`
-  become: yes
-  shell: "chown -R {{ user }} /usr/lib/node_modules"
-
-# - name: Start docker daemon at boot.
-#   systemd:
-#     name: docker
-#     enabled: yes
-#   when: ansible_distribution == 'CentOS'
+  file:
+    path: /usr/lib/node_modules
+    state: directory
+    owner: "{{ user }}"
 
 - name: Install RCM to manage dotfiles.
-  become: yes
   tags: rcm
   include_role: name=rcm
 
-- name: Set up neovim.
-  include_role: name=nvim
+# - name: Set up neovim.
+#   include_role: name=nvim
+

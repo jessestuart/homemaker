@@ -1,61 +1,61 @@
 {
-	"variables": {
-		"aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
-		"aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
-		"do_api_token": "{{env `DO_API_TOKEN`}}",
-		"do_base_image": "centos-7-x64",
-		"do_size": "c-2",
-		"do_region": "nyc3"
-	},
-	"builders": [
-		{
-			"type": "digitalocean",
-			"api_token": "{{user `do_api_token`}}",
-			"image": "{{ user `do_base_image` }}",
-			"region": "{{ user `do_region` }}",
-			"size": "{{ user `do_size` }}",
-			"ssh_username": "root"
-		},
-		{
-			"type": "amazon-ebs",
-			"access_key": "{{user `aws_access_key`}}",
-			"ami_name": "homemaker-aws-{{timestamp}}",
-			"instance_type": "t2.medium",
-			"region": "us-east-1",
-			"secret_key": "{{user `aws_secret_key`}}",
-			"source_ami": "ami-02e98f78",
-			"ssh_username": "vagrant"
-		}
-	],
-	"provisioners": [
-		{
-			"type": "shell",
-			"script": "scripts/install_ansible.sh"
-		},
-		{
-			"type": "shell",
-			"inline": ["sleep 30", "sudo yum -y update", "sudo yum install -y python"]
-		},
-		{
-			"type": "ansible-local",
-			"galaxy_file": "./ansible/requirements.yml",
-			"host_vars": "./ansible/host_vars/",
-			"role_paths": [
-				"./ansible/roles/",
-				"./ansible/roles/base",
-				"./ansible/roles/dotfiles",
-				"./ansible/roles/gtm",
-				"./ansible/roles/homemaker",
-				"./ansible/roles/nginx",
-				"./ansible/roles/nvim",
-				"./ansible/roles/opsec",
-				"./ansible/roles/rcm",
-				"./ansible/roles/ssh-users",
-				"./ansible/roles/tmux",
-				"./ansible/roles/zsh"
-			],
-			"playbook_file": "./ansible/bootstrap.yml"
-		}
-	],
-	"post-processors": ["vagrant"]
+  "variables": {
+    "aws_access_key": "{{ env `AWS_ACCESS_KEY_ID` }}",
+    "aws_secret_key": "{{ env `AWS_SECRET_ACCESS_KEY` }}",
+    "do_api_token": "{{env `DO_API_TOKEN`}}",
+    "do_base_image": "centos-7-x64",
+    "do_size": "c-2",
+    "do_region": "nyc3"
+  },
+  "builders": [
+    {
+      "type": "digitalocean",
+      "api_token": "{{user `do_api_token`}}",
+      "image": "{{ user `do_base_image` }}",
+      "region": "{{ user `do_region` }}",
+      "size": "{{ user `do_size` }}",
+      "ssh_username": "root"
+    },
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "ami_name": "homemaker-aws-{{timestamp}}",
+      "instance_type": "t2.medium",
+      "region": "us-east-1",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "source_ami": "ami-02e98f78",
+      "ssh_username": "vagrant"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/install_ansible.sh"
+    },
+    {
+      "type": "shell",
+      "inline": ["sleep 30", "sudo yum -y update", "sudo yum install -y python"]
+    },
+    {
+      "type": "ansible-local",
+      "galaxy_file": "./ansible/requirements.yml",
+      "host_vars": "./ansible/host_vars/",
+      "role_paths": [
+        "./ansible/roles/",
+        "./ansible/roles/base",
+        "./ansible/roles/dotfiles",
+        "./ansible/roles/gtm",
+        "./ansible/roles/homemaker",
+        "./ansible/roles/nginx",
+        "./ansible/roles/nvim",
+        "./ansible/roles/opsec",
+        "./ansible/roles/rcm",
+        "./ansible/roles/ssh-users",
+        "./ansible/roles/tmux",
+        "./ansible/roles/zsh"
+      ],
+      "playbook_file": "./ansible/bootstrap.yml"
+    }
+  ],
+  "post-processors": ["vagrant"]
 }

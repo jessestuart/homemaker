@@ -1,0 +1,13 @@
+- name: Install apt packages
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update-cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - aptitude
+    - openssh-client
+    - openssh-server
+    - python-dev # Required to install some pip packages.
+    - python-setuptools
+    - runit

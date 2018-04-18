@@ -1,0 +1,12 @@
+---
+users:
+  - username: pi
+    name: pi
+    groups: ["docker", "ssh", "sudo", "wheel"]
+    home: /home/pi
+    ssh_key: "$(echo ~/.ssh/id_rsa.pub)"
+
+groups_to_create:
+  - name: docker
+  - name: ssh
+  - name: sudo

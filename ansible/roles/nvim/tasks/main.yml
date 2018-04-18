@@ -17,8 +17,7 @@
   when: not vim_plug.stat.exists
   become: yes
   become_user: "{{ user }}"
-  tags:
-    - vim
+  tags: vim
   file:
     path: "$HOME/.local/share/nvim/site/autoload"
     state: directory
@@ -28,8 +27,7 @@
   when: not vim_plug.stat.exists
   become: yes
   become_user: "{{ user }}"
-  tags:
-    - vim
+  tags: vim
   get_url:
     url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     dest: "$HOME/.local/share/nvim/site/autoload/"
@@ -40,10 +38,12 @@
   become: yes
   become_user: "{{ user }}"
   ignore_errors: true
-  raw: nvim -e +PlugInstall +qall &>/dev/null
+  raw: nvim "+PlugInstall --sync" +qa &>/dev/null
+  changed_when: no
 
 - name: Update remote plugins (e.g., deoplete).
   become: yes
   become_user: "{{ user }}"
   ignore_errors: true
-  raw: nvim -e +UpdateRemotePlugins +qall &>/dev/null
+  raw: nvim "+UpdateRemotePlugins --sync" +qa &>/dev/null
+  changed_when: no

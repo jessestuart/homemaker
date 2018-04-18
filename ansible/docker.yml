@@ -1,0 +1,7 @@
+---
+- name: Ensure docker is installed.
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+    - include_role: name=geerlingguy.docker
