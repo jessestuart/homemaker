@@ -8,7 +8,8 @@ jobs:
       - image: jessestuart/vagrant-build-base:latest
     environment:
       # yamllint disable-line
-      - IMAGE_ID: "672278003389.dkr.ecr.us-east-1.amazonaws.com/jessestuart/homemaker"
+      # - IMAGE_ID: "672278003389.dkr.ecr.us-east-1.amazonaws.com/jessestuart/homemaker"
+      - IMAGE_ID: "jessestuart/homemaker"
       # yamllint disable-line
       - AWS_AUTH_COMMAND: "aws ecr get-login --no-include-email --region us-east-1"
 
@@ -75,15 +76,16 @@ jobs:
             docker commit $(docker ps -l -q) "${IMAGE_ID}"
 
       - run:
-          name: Authenticate to Amazon ECR.
+          name: Authenticate to Docker Hub.
           command: |
-            eval $(${AWS_AUTH_COMMAND})
+            echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
 
       - run:
           name: Push Docker image to ECR.
           command: |
-            docker tag    "${IMAGE_ID}" "${IMAGE_ID}:circle-${CIRCLE_BUILD_NUM}"
-            docker push                 "${IMAGE_ID}:circle-${CIRCLE_BUILD_NUM}"
+            export VERSION=$(date -u +"%Y%m%d")
+            docker tag    "${IMAGE_ID}" "${IMAGE_ID}:${VERSION}"
+            docker push                 "${IMAGE_ID}:${VERSION}"
             if [ "${CIRCLE_BRANCH}" = 'master' ]; then
               docker tag  "${IMAGE_ID}" "${IMAGE_ID}:latest"
               docker push               "${IMAGE_ID}:latest"
@@ -95,11 +97,13 @@ workflows:
     jobs:
       - build
   nightly:
+    jobs:
+      - build
     triggers:
       - schedule:
           cron: "0 0 * * *"
           filters:
             branches:
               only:
-    jobs:
-      - build
+                - master
+                - jesse/20180328
