@@ -1,0 +1,7 @@
+---
+- name: Install Node 9.x debian source.
+  shell: |
+    curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+
+- name: Ensure Node 9.x is installed.
+  apt: name=nodejs state=latest

@@ -1,0 +1,19 @@
+- name: Install Linuxbrew dependencies.
+  become: yes
+  shell: yum groupinstall 'Development Tools'
+  when: ansible_distribution == 'CentOS'
+
+- name: Install Linuxbrew dependencies.
+  become: yes
+  apt: name=build-essential state=latest
+  when: ansible_distribution == 'Debian'
+
+- name: Install Linuxbrew.
+  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+
+- name: Install Linuxbrew packages.
+  homebrew:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - exa

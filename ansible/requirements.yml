@@ -1,4 +1,3 @@
----
 - src: bennojoy.ntp
 - src: dev-sec.os-hardening
 - src: geerlingguy.docker

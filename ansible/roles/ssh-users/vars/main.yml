@@ -2,19 +2,16 @@
 # User definitions (called for all boxes).
 # Change state to "absent" to force removal of a user.
 ssh_users:
-  # yamllint disable
-  # # `pi` is the substitute for root login.
-  # - name: pi
-  #   state: present
-  #   is_sudoer: true
-  #   custom_home: false
-  #   shell: /bin/bash
-  #   public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDEcWKqLYv5n/bvrzBX3kCqOJjKWUX1kk3dKV7lmKOalkRruCcQOcW4ttp0b2G2sVs11zgZdpR6CkTvmNafLGa9L/7rpJ0yxr57wXq0/8D3Pv9Q0RkbEqLFwxZqMzBYmypX9iyUs1ysoB/tULi4Woy0rldqg8a0ddAawlVWLsA1ICUVeWGxa2AZkcSebBWmglMFur7/WLOOIj5iphKAcXRyVPmG0diiq81HujB4wMdNXR+3QInCR4tYZ0zGdypdrm/DaJqEeKqV3qyGTP1zrzmknT/awZnB629jBevFHSySSvxH57eE3ie4A1JzPUqak//oJlrS9SMdeBeVoXxXv2za4km+f3OTtDYcIXbHmf8gY2mffNby46bzJgqYkFAUlDtNhOwBM0xYfh8HFERyxJd+YJ96khNizcduGnqaLOrYHB9Xycq0k3ezR0qmGyTxZu9zKpgbsXLXkzL860ZggACoiWk3hnL5j8nNMaqCu5cJh74BEYe+CflJFoAOsK2uIefrgZUIe/hPxe65Sl4K7eHFOyKWZLbGBzOAqQyfa3T+NQank0KBm75QWAQeaVjp+rLd/3Nge7eGwbyfta82y7w7Jrbl+FTG1fyWzcEu7SiM5d2cr7HzHCI63hDcLwAYcvDyf+Dr58gYVVS4nKNcUet6PY5umCDR5s9HwxaKP8ns0Q==
+  - name: ansible
+    state: present
+    is_sudoer: yes
+    custom_home: false
+    shell: /bin/bash
+    public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC9+S4jlFGmB5uhy41J1g+9YxoT1QDwrlTXavtgsmRiWXfekIqaE6CydYrPjyfPq7lvZsHfbI6kJxiOajpdIUq/gAH0wodxo91fvh7QboT2F7Q+9m5WjrPy7Kmb4VRImd9AUabCzaIEY1NWKoR9lsgSDLynpu4rr6ZgiE6AWgQjRHcVcUT+BBBuz3BzyGsKHZz1cWTRgT1SMx1r/XLHRICG6SnKWQhOSo/1V7BTSFYjdvk4wS23KKDOkvsHqrn/XKUwdLWkcEpx1pLwZXif748gdN/s9+bnYYnRV30og6/3JU+7W6zYqfpzqYnfR9PsH9y/ClibXtMY3c0wjAB8LkKmEm6RC6QPTy/99+OULP8jKSPnkeW9F5EijNIwtrjHoeP4BV0bB1gLQ8jkAnVY0lUAR7vGBsbJuAVy2zcdln57qsagV13yJM8a5uQY9lozYcVnB/wLVFUQNQvsyj1ytr0LeG+7bTs/mxpAoetonuDb0KUQJ6xEm0yiyPq/z+2o2idnM0y4a/Ncn3txcagZXm44P7OeZkSIe4BF0Sk1AsIUlHLDbccVYXKSH3BdcD/0a6Kv+Lbo2l5SgSWNZfQgj2zl5+wXOUioAue416ZsQRc7iUaIw1snOBO5xoKTrE3zCbutTiNGKmzgyuqP9tC+rFFNbO9jDXuCshwLDDNBQ8aLQQ==
 
-  - name: vagrant
+  - name: jesse
     state: present
     is_sudoer: true
     custom_home: false
     shell: /bin/bash
-    public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3JZwbsMzqmsEQvYVhm+Q1NyE/O/G64xd6s2CuiRld+2PYZimUdZ/Bo0c/oBpiNtpBzWre/cOFjzlBg494hhZKT7IzCfL6DVRiTVj6S3WATkzeXTM2va5IvH5L8YRs0y11jL3nXKB3RO3hANjWnxdGH3N8+BILaTD7q5XX41fKwH5bLhppLppzPFyUUvZfUA01OOczFX1fQhDp2KYrl1j7rEXWAMQT6rUsqawDWaCXtveqaNDN+1NKm//6/IaO11F3zj9LBH1+isYJVTD6N7+ihCcBfmu5xKDw1/lM6DtalGZy6UlNfp5QqnTUsMuMkSf12lhT0hYrp8MfIn7Qklrl
-  # yamllint enable
+    public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDK2Mxre4eFibJo74dIDtkMaxWCRC6xNHAjVWCFTp5oyDOCImbUb3s2gdhxjgRexLaHXsii97PeKLygVEJrZhH/rUAb5Phc+OMTRJ3s8bvD/+oPvU4cc2pGYAvUjXXTB/nJPCfwaQ+MLSmvttrKcTiDHTOpw4lSl27X4jKExHr5Aln0TxsRFDGLvDuQlyS8fAoXjAllxzJ7eNgF/HfhlALqLJw9DkKRuu+n+lILJwBSFJ2ueQ7VbZ4RHbrJUSWMJajYsrfspNTq4zf35S/GG+fVWe3t/agAkkGvErWuVOIpZBXg7FwfzoODPPlZpi2D5HuMtZshyCHgkRFRXZFJ9ZnrbILsMgloSsek1PELZ3U1IIw740q2r5ZNZbMt4JWHfbgDUuNNF8UTufrczyOCEGKERol3KAqOiATVQpzX1AhX78czVcLC9ETcG/2Rw7FSziMVZgSbVVUJy/lZR2x1aSs/daXA6yEn/ptlqU2hh+qsI6MtV4PBPgYhma1h6VEJFzrrwSJwPbqBf6oTdL4/7andk0gRRuk5lFNmi5eHR6n7gv7YJvg9QaUVitzxqdH28i9o/B//RSzqbQ5s84OPUPOlq67ZpF2Gvg6DvN1YaVCTTAdEltW+D1hKKdcmIot+6Zuzwq7PkrYVoDHLpQaNOMYMH8y67IKEcL/0/VKGT/QLzw==

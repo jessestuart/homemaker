@@ -1,4 +1,24 @@
 ---
+- name: Install EPEL if RHEL-based.
+  become: yes
+  include_roles:
+    - geerlingguy.repo-epel
+  when: ansible_distribution == 'CentOS'
+  ignore_errors: yes
+  tags:
+    - opsec
+    - epel
+    - rhel
+
+- name: Ensure fail2ban is installed.
+  package: name=fail2ban state=latest
+  notify:
+    - Restart fail2ban
+
+- name: Ensure ufw is configured.
+  tags: ufw
+  include_role: name=ufw
+
 # ====================================================================
 # To protect against man-in-the-middle attacks, at least use the local
 # (control) machine to find the right github RSA public key.
@@ -25,14 +45,8 @@
   notify:
     - Restart ssh service
 
-- name: Install docker-py.
-  become: yes
-  pip: name=docker-py state=latest
-  tags: hostname
-
 # Set the hostname as specified in the inventory.
 - name: Set /etc/hostname
-  gather_facts: yes
   become: yes
   tags: hostname
   hostname: name="{{ hostname }}"
@@ -49,11 +63,19 @@
     regexp: '127.0.0.1'
     line: "127.0.0.1 localhost {{ hostname }}"
 
+- name: Deny password-based login.
+  lineinfile:
+    state: present
+    dest: /etc/ssh/sshd_config
+    regexp: PasswordAuthentication
+    line: 'PasswordAuthentication no'
+  notify:
+    - Restart ssh service
+
 # - name: Remove root public keys
 #   file:
 #     state: absent
 #     path: /root/.ssh/authorized_keys
-
 # - name: Deny root login
 #   lineinfile:
 #     state: present

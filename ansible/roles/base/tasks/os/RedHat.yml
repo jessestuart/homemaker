@@ -1,0 +1,16 @@
+---
+- name: Ensure all existing packages are up-to-date.
+  yum:
+    name: '*'
+    state: latest
+
+# - name: Ensure CentOS EPEL repos are available.
+#   ignore_errors: yes
+#   failed_when: no
+#   include_role:
+#     name: geerlingguy.repo-epel
+
+- name: Ensure IUS (Inline with Upstream Stable) RPM is available.
+  yum:
+    name: https://centos7.iuscommunity.org/ius-release.rpm
+    state: present

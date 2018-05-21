@@ -1,0 +1,67 @@
+---
+- name: Ensure Python is installed -- required for Ansible module execution.
+  gather_facts: no
+  hosts: all
+  become: yes
+  roles:
+    - ansible
+  tags: first-run
+
+- name: Ensure Python is installed on RHEL-based boxes.
+  gather_facts: no
+  hosts: all
+  become: yes
+  tags: first-run
+  tasks:
+    - raw: |
+        if test -e /etc/redhat-release; then
+          test -e "$(which python)" || (yum update -y && yum install -y python)
+        fi
+      changed_when: no
+      ignore_errors: yes
+
+
+# TODO: Remove this when this patch makes it into a release:
+# https://github.com/ansible/ansible/pull/34925
+#
+# @see https://github.com/ansible/ansible/issues/37850,
+#      https://github.com/ansible/ansible/issues/37911
+- name: Ensure this Debian package is installed, because of a bug in Ansible 2.5.0 :(
+  hosts: all
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  tasks:
+    - package: name=dmidecode state=latest
+
+- name: Ensure we can provision without tty.
+  hosts: all
+  tags: first-run
+  become: yes
+  tasks:
+    - raw: touch /etc/sudoers && sed -i.bak -e '/Defaults.*requiretty/s/^/#/' /etc/sudoers
+      changed_when: no
+
+- name: Create SSH users.
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tags: users
+  roles:
+    - ssh-users
+
+- name: Harden box security / configure sane security defaults.
+  become: yes
+  hosts: all
+  gather_facts: yes
+  tags: opsec
+  vars_files:
+    - host_vars/main.yml
+  tasks:
+    - name: Ensure at least one user has been created.
+      shell: ls /home | wc -l | tr -d ' '
+      register: home_dirs
+      changed_when: no
+    - name: Run the opsec playbook.
+      include_role: name=opsec
+      when: home_dirs.stdout | int > 0

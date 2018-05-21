@@ -1,28 +1,35 @@
 ---
-- name: Determine if dotfiles directory exists.
+- name: Install RCM to manage dotfiles.
   become: yes
-  become_user: "{{ user }}"
-  stat: path="$HOME/dotfiles"
+  tags: rcm
+  include_role: name=rcm
+
+- name: Determine if dotfiles directory exists.
+  stat: path="/home/{{ user }}/dotfiles"
   register: dotfiles_dir
 
 - name: Create dotfiles directory.
-  become: yes
-  become_user: "{{ user }}"
   when: not dotfiles_dir.stat.exists
   file:
-    path: "$HOME/dotfiles"
+    path: "/home/{{ user }}/dotfiles"
     state: directory
 
+# TODO(20180107) Abstract this out into a variable.
 - name: Pull dotfiles.
-  become: yes
-  become_user: "{{ user }}"
   git:
     repo: https://github.com/jessestuart/dotfiles
-    dest: "$HOME/dotfiles"
+    dest: "/home/{{ user }}/dotfiles"
     force: yes
 
-- name: UNLEASH THE DOTFILES!
-  become: yes
-  become_user: "{{ user }}"
-  shell: /usr/local/bin/rcup -d "$HOME/dotfiles"
-  ignore_errors: yes
+- name: ~* unleash the dotfiles *~
+  command: /usr/local/bin/rcup -d "/home/{{ user }}/dotfiles"
+
+# NB: `source` doesn't work with Ansible's `command` module.
+# @see https://stackoverflow.com/q/22256884
+- name: Source *rc files.
+  shell: |
+    if test -e "/home/{{ user }}/.zshrc"; then
+      source "/home/{{ user }}/.zshrc"
+    fi
+  args:
+    executable: /bin/zsh
